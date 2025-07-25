@@ -144,12 +144,6 @@ This project is open source and available under the [MIT License](LICENSE).
 4. Test thoroughly
 5. Submit a pull request
 
-## 📞 Support
-
-For support or questions, please contact:
-- Email: info@sugama.com
-- Phone: +1 (555) 123-4567
-
 ---
 
 Built with ❤️ using React and modern web technologies. 
