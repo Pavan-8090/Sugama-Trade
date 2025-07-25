@@ -24,7 +24,58 @@ import {
   Crown,
   Gem,
   Diamond,
-  Award
+  Award,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  Settings,
+  Maximize2,
+  Minimize2,
+  RotateCcw,
+  RefreshCw,
+  Activity,
+  TrendingDown,
+  DollarSign,
+  Bitcoin,
+  Ethereum,
+  Coins,
+  Wallet,
+  Lock,
+  Unlock,
+  Eye,
+  EyeOff,
+  Download,
+  Upload,
+  Share2,
+  Heart,
+  Bookmark,
+  Filter,
+  Search,
+  Bell,
+  User,
+  LogOut,
+  Cog,
+  HelpCircle,
+  Info,
+  AlertCircle,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Calendar,
+  MapPin,
+  Phone,
+  Mail,
+  ExternalLink,
+  Link,
+  Copy,
+  Edit,
+  Trash2,
+  Plus,
+  Minus,
+  Percent,
+  Hash,
+  AtSign
 } from 'lucide-react';
 
 const App = () => {
@@ -36,6 +87,71 @@ const App = () => {
     blur: 'none'
   });
   const [heroBlend, setHeroBlend] = useState(0);
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  
+
+
+  // Simple cursor following div
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setCursorPosition({ x: e.clientX, y: e.clientY });
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  // Cursor following effect for 3D cards
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const cards = document.querySelectorAll('.card-3d-lift');
+      
+      cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        // Calculate distance from cursor to card center
+        const deltaX = e.clientX - centerX;
+        const deltaY = e.clientY - centerY;
+        
+        // Calculate rotation based on mouse position
+        const rotateX = (deltaY / (rect.height / 2)) * -10; // Max 10 degrees
+        const rotateY = (deltaX / (rect.width / 2)) * 10;   // Max 10 degrees
+        
+        // Apply the rotation using CSS custom properties
+        card.style.setProperty('--rotate-x', `${rotateX}deg`);
+        card.style.setProperty('--rotate-y', `${rotateY}deg`);
+        
+        // Add cursor-follow class when hovering
+        if (e.target.closest('.card-3d-lift') === card) {
+          card.classList.add('cursor-follow');
+        } else {
+          card.classList.remove('cursor-follow');
+        }
+      });
+    };
+
+    const handleMouseLeave = () => {
+      const cards = document.querySelectorAll('.card-3d-lift');
+      cards.forEach(card => {
+        card.classList.remove('cursor-follow');
+        card.style.setProperty('--rotate-x', '0deg');
+        card.style.setProperty('--rotate-y', '0deg');
+      });
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
 
   // Section refs
   const homeRef = useRef(null);
@@ -48,16 +164,173 @@ const App = () => {
   const featuresRef = useRef(null);
   const ctaRef = useRef(null);
 
-  // Load Premium Google Fonts
+  // Load World's Best Premium Fonts
   useEffect(() => {
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap';
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
+    // Load multiple premium font families
+    const fontLinks = [
+      // Clash Display - Premium display font
+      'https://fonts.cdnfonts.com/css/clash-display',
+      // General Sans - Modern geometric sans-serif
+      'https://fonts.cdnfonts.com/css/general-sans',
+      // Cabinet Grotesk - Premium variable font
+      'https://fonts.cdnfonts.com/css/cabinet-grotesk',
+      // Google Fonts - Premium selections
+      'https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@100;200;300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800&family=Albert+Sans:wght@100;200;300;400;500;600;700;800;900&family=Onest:wght@100;200;300;400;500;600;700;800;900&family=Geist:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap'
+    ];
+
+    fontLinks.forEach(href => {
+      const link = document.createElement('link');
+      link.href = href;
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+    });
     
-    // Add custom marquee animations
+    // Add sophisticated typography styles and animations
     const style = document.createElement('style');
     style.textContent = `
+      /* Premium Typography System */
+      .font-clash { font-family: 'Clash Display', sans-serif; }
+      .font-general { font-family: 'General Sans', sans-serif; }
+      .font-cabinet { font-family: 'Cabinet Grotesk', sans-serif; }
+      .font-albert { font-family: 'Albert Sans', sans-serif; }
+      .font-onest { font-family: 'Onest', sans-serif; }
+      .font-geist { font-family: 'Geist', sans-serif; }
+      .font-jetbrains { font-family: 'JetBrains Mono', monospace; }
+      
+      /* Advanced Text Gradients */
+      .text-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      .text-gradient-secondary {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      .text-gradient-tech {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      .text-gradient-premium {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      /* Sophisticated Text Shadows */
+      .text-shadow-soft {
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .text-shadow-glow {
+        text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+      }
+      
+      .text-shadow-neon {
+        text-shadow: 0 0 10px rgba(59, 130, 246, 0.8), 0 0 20px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.4);
+      }
+      
+      /* Advanced Letter Spacing */
+      .tracking-tight { letter-spacing: -0.025em; }
+      .tracking-wide { letter-spacing: 0.025em; }
+      .tracking-wider { letter-spacing: 0.05em; }
+      .tracking-widest { letter-spacing: 0.1em; }
+      
+      /* Premium Line Heights */
+      .leading-tight { line-height: 1.25; }
+      .leading-snug { line-height: 1.375; }
+      .leading-normal { line-height: 1.5; }
+      .leading-relaxed { line-height: 1.625; }
+      .leading-loose { line-height: 2; }
+      
+      /* Text Animation Effects */
+      @keyframes textGlow {
+        0%, 100% { text-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+        50% { text-shadow: 0 0 20px rgba(59, 130, 246, 0.8), 0 0 30px rgba(59, 130, 246, 0.6); }
+      }
+      
+      @keyframes textFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+      }
+      
+      @keyframes textPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+      }
+      
+      .animate-text-glow {
+        animation: textGlow 2s ease-in-out infinite;
+      }
+      
+      .animate-text-float {
+        animation: textFloat 3s ease-in-out infinite;
+      }
+      
+      .animate-text-pulse {
+        animation: textPulse 2s ease-in-out infinite;
+      }
+      
+      /* Custom blink animation for smart routing section */
+      @keyframes sectionBlink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+      }
+      
+      .smart-routing-container:hover {
+        animation: sectionBlink 0.8s ease-in-out;
+      }
+      
+      /* Premium Typography Classes */
+      .hero-title {
+        font-family: 'Clash Display', sans-serif;
+        font-weight: 700;
+        font-size: clamp(2.5rem, 5vw, 4.5rem);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      .section-title {
+        font-family: 'General Sans', sans-serif;
+        font-weight: 600;
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+      }
+      
+      .body-text {
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        line-height: 1.6;
+        letter-spacing: 0.01em;
+      }
+      
+      .accent-text {
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+      }
+      
+      .code-text {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 400;
+        letter-spacing: 0.02em;
+      }
+      
+      /* Marquee animations */
       @keyframes marquee {
         0% { transform: translateX(0); }
         100% { transform: translateX(-50%); }
@@ -71,6 +344,572 @@ const App = () => {
       }
       .animate-marquee-reverse {
         animation: marquee-reverse 20s linear infinite;
+      }
+      
+      /* Advanced 3D Effects and Lift Styling */
+      .card-3d-lift {
+        transform: translateY(0) translateZ(0);
+        transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        box-shadow: 
+          0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06),
+          0 0 0 0 rgba(59, 130, 246, 0);
+      }
+      
+      .card-3d-lift:hover {
+        transform: translateY(-12px) translateZ(20px);
+        box-shadow: 
+          0 25px 50px -12px rgba(0, 0, 0, 0.25),
+          0 0 0 1px rgba(59, 130, 246, 0.1),
+          0 0 40px rgba(59, 130, 246, 0.15),
+          0 0 80px rgba(147, 51, 234, 0.1);
+      }
+      
+      .card-3d-lift.cursor-follow {
+        transform: translateY(-12px) translateZ(20px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
+        transition: transform 0.1s ease-out;
+      }
+      
+      .card-3d-lift.cursor-follow .icon-3d-container {
+        transform: translateZ(30px) rotateY(calc(var(--rotate-y, 0deg) * 0.5)) rotateX(calc(var(--rotate-x, 0deg) * 0.3));
+        transition: transform 0.1s ease-out;
+      }
+      
+      .card-3d-lift.cursor-follow .text-3d-lift {
+        transform: translateZ(20px) translateX(calc(var(--rotate-y, 0deg) * 0.1px)) translateY(calc(var(--rotate-x, 0deg) * 0.1px));
+        transition: transform 0.1s ease-out;
+      }
+      
+      /* Enhanced Feature Cards with Multiple Colors */
+      .feature-card-enhanced {
+        position: relative;
+        transform-style: preserve-3d;
+        perspective: 1000px;
+        transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      
+      .feature-card-enhanced::before {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        background: linear-gradient(45deg, 
+          var(--border-color-1, #3b82f6), 
+          var(--border-color-2, #8b5cf6), 
+          var(--border-color-3, #06b6d4), 
+          var(--border-color-1, #3b82f6));
+        border-radius: 1.5rem;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        z-index: -1;
+        filter: blur(8px);
+        animation: borderRotate 3s linear infinite;
+      }
+      
+      .feature-card-enhanced:hover::before {
+        opacity: 1;
+      }
+      
+      @keyframes borderRotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      .feature-card-enhanced .card-inner {
+        position: relative;
+        background: linear-gradient(135deg, 
+          var(--bg-color-1, rgba(31, 41, 55, 0.8)), 
+          var(--bg-color-2, rgba(17, 24, 39, 0.8)));
+        border-radius: 1rem;
+        padding: 1.5rem;
+        border: 2px solid transparent;
+        transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        backdrop-filter: blur(20px);
+      }
+      
+      .feature-card-enhanced:hover .card-inner {
+        transform: translateZ(10px) rotateX(2deg) rotateY(2deg);
+        border-color: var(--border-color-1, #3b82f6);
+        box-shadow: 
+          0 25px 50px -12px rgba(0, 0, 0, 0.4),
+          0 0 0 1px var(--border-color-1, #3b82f6),
+          0 0 40px var(--border-color-1, #3b82f6),
+          0 0 80px var(--border-color-2, #8b5cf6);
+      }
+      
+      .feature-card-enhanced .icon-container {
+        position: relative;
+        width: 4rem;
+        height: 4rem;
+        margin: 0 auto 1rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        background: linear-gradient(135deg, 
+          var(--icon-bg-1, rgba(59, 130, 246, 0.2)), 
+          var(--icon-bg-2, rgba(139, 92, 246, 0.2)));
+      }
+      
+      .feature-card-enhanced:hover .icon-container {
+        transform: translateZ(30px) scale(1.1) rotateY(10deg);
+        background: linear-gradient(135deg, 
+          var(--icon-bg-1, rgba(59, 130, 246, 0.4)), 
+          var(--icon-bg-2, rgba(139, 92, 246, 0.4)));
+        box-shadow: 
+          0 10px 30px rgba(0, 0, 0, 0.3),
+          0 0 20px var(--icon-color, #3b82f6);
+      }
+      
+      .feature-card-enhanced .icon-container svg {
+        color: var(--icon-color, #3b82f6);
+        transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      
+      .feature-card-enhanced:hover .icon-container svg {
+        color: var(--icon-hover-color, #60a5fa);
+        transform: scale(1.2);
+      }
+      
+      .feature-card-enhanced .content {
+        transform: translateZ(0);
+        transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      
+      .feature-card-enhanced:hover .content {
+        transform: translateZ(5px);
+      }
+      
+      .feature-card-enhanced h3 {
+        font-family: 'Cabinet Grotesk', sans-serif;
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: white;
+        text-align: center;
+        margin-bottom: 0.75rem;
+        transition: color 0.6s ease;
+      }
+      
+      .feature-card-enhanced:hover h3 {
+        color: white !important;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.4);
+        font-weight: 700;
+      }
+      
+      .feature-card-enhanced p {
+        font-family: 'Albert Sans', sans-serif;
+        font-size: 0.875rem;
+        color: #9ca3af;
+        text-align: center;
+        line-height: 1.5;
+        transition: color 0.6s ease;
+      }
+      
+      .feature-card-enhanced:hover p {
+        color: #f3f4f6 !important;
+        text-shadow: 0 0 10px rgba(243, 244, 246, 0.6);
+        font-weight: 500;
+      }
+      
+      /* Floating particles for enhanced cards */
+      .feature-card-enhanced .particles {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        pointer-events: none;
+      }
+      
+      .feature-card-enhanced:hover .particles {
+        opacity: 1;
+      }
+      
+      .feature-card-enhanced .particle {
+        position: absolute;
+        border-radius: 50%;
+        animation: particleFloat 3s ease-in-out infinite;
+      }
+      
+      @keyframes particleFloat {
+        0%, 100% { 
+          transform: translateY(0px) scale(1);
+          opacity: 0.7;
+        }
+        50% { 
+          transform: translateY(-10px) scale(1.2);
+          opacity: 1;
+        }
+      }
+      
+      /* Enhanced Smart Routing Section Effects */
+      .smart-routing-container {
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .smart-routing-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, 
+          rgba(34, 197, 94, 0.1) 0%, 
+          rgba(16, 185, 129, 0.1) 25%, 
+          rgba(5, 150, 105, 0.1) 50%, 
+          rgba(34, 197, 94, 0.1) 75%, 
+          rgba(16, 185, 129, 0.1) 100%);
+        opacity: 0;
+        transition: opacity 0.8s ease;
+        z-index: 1;
+      }
+      
+      .smart-routing-container:hover::before {
+        opacity: 1;
+        animation: routingGradientShift 4s ease-in-out infinite;
+      }
+      
+      @keyframes routingGradientShift {
+        0%, 100% { 
+          background-position: 0% 50%;
+        }
+        50% { 
+          background-position: 100% 50%;
+        }
+      }
+      
+      .smart-routing-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #22c55e, #10b981);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 2rem;
+        font-weight: 700;
+        font-size: 0.875rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.6s ease;
+        box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+      }
+      
+      .smart-routing-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+          transparent, 
+          rgba(255, 255, 255, 0.4), 
+          transparent);
+        transition: left 0.8s ease;
+      }
+      
+      .smart-routing-badge:hover::before {
+        left: 100%;
+      }
+      
+      .smart-routing-badge:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 
+          0 15px 35px rgba(34, 197, 94, 0.5),
+          0 0 30px rgba(34, 197, 94, 0.6);
+      }
+      
+      .smart-routing-title {
+        font-family: 'Clash Display', sans-serif;
+        font-weight: 800;
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        position: relative;
+        transition: all 0.6s ease;
+      }
+      
+      .smart-routing-title .gradient-text {
+        background: linear-gradient(135deg, 
+          #60a5fa 0%, 
+          #8b5cf6 25%, 
+          #ec4899 50%, 
+          #8b5cf6 75%, 
+          #60a5fa 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        background-size: 200% 200%;
+        animation: titleGradient 3s ease-in-out infinite;
+      }
+      
+      @keyframes titleGradient {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      
+      .smart-routing-container:hover .smart-routing-title .gradient-text {
+        animation: titleGradient 1.5s ease-in-out infinite;
+      }
+      
+      .smart-routing-description {
+        font-family: 'Albert Sans', sans-serif;
+        font-size: 1.125rem;
+        line-height: 1.7;
+        color: #d1d5db;
+        position: relative;
+        transition: all 0.6s ease;
+        margin-bottom: 2rem;
+      }
+      
+      .smart-routing-container:hover .smart-routing-description {
+        color: #f3f4f6;
+        text-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+      }
+      
+      .smart-routing-chat-container {
+        position: relative;
+        transform-style: preserve-3d;
+        perspective: 1200px;
+        transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      
+      .smart-routing-chat-container:hover {
+        transform: translateZ(40px) rotateY(-8deg) rotateX(5deg);
+      }
+      
+      .smart-routing-chat-container::before {
+        content: '';
+        position: absolute;
+        inset: -6px;
+        background: linear-gradient(45deg, 
+          #22c55e, #10b981, #059669, #22c55e);
+        border-radius: 2rem;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        z-index: -1;
+        filter: blur(15px);
+        animation: chatBorderRotate 5s linear infinite;
+      }
+      
+      .smart-routing-chat-container:hover::before {
+        opacity: 0.9;
+      }
+      
+      @keyframes chatBorderRotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      .smart-routing-chat-inner {
+        position: relative;
+        background: linear-gradient(135deg, 
+          rgba(240, 253, 244, 0.95), 
+          rgba(220, 252, 231, 0.95));
+        border-radius: 1.5rem;
+        overflow: hidden;
+        border: 3px solid transparent;
+        transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        backdrop-filter: blur(20px);
+        box-shadow: 
+          0 20px 40px rgba(0, 0, 0, 0.1),
+          0 0 0 1px rgba(34, 197, 94, 0.1);
+      }
+      
+      .smart-routing-chat-container:hover .smart-routing-chat-inner {
+        border-color: #22c55e;
+        box-shadow: 
+          0 40px 80px -12px rgba(0, 0, 0, 0.3),
+          0 0 0 1px #22c55e,
+          0 0 60px #22c55e,
+          0 0 120px rgba(16, 185, 129, 0.4);
+      }
+      
+      .chat-bubble {
+        transition: all 0.4s ease;
+        transform: translateZ(0);
+      }
+      
+      .smart-routing-chat-container:hover .chat-bubble {
+        transform: translateZ(10px);
+      }
+      
+      .chat-bubble:hover {
+        transform: translateZ(15px) scale(1.02);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+      
+      .action-button {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        transform: translateZ(0);
+      }
+      
+      .action-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+          transparent, 
+          rgba(255, 255, 255, 0.3), 
+          transparent);
+        transition: left 0.6s ease;
+      }
+      
+      .action-button:hover::before {
+        left: 100%;
+      }
+      
+      .action-button:hover {
+        transform: translateZ(5px) translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+      
+      .floating-elements {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+      
+      .smart-routing-chat-container:hover .floating-elements {
+        opacity: 1;
+      }
+      
+      .floating-element {
+        position: absolute;
+        border-radius: 50%;
+        animation: floatingBounce 3s ease-in-out infinite;
+      }
+      
+      @keyframes floatingBounce {
+        0%, 100% { 
+          transform: translateY(0px) scale(1);
+          opacity: 0.7;
+        }
+        50% { 
+          transform: translateY(-15px) scale(1.1);
+          opacity: 1;
+        }
+      }
+      
+
+      
+      .card-3d-lift:active {
+        transform: translateY(-8px) translateZ(10px);
+        transition: all 0.1s ease;
+      }
+      
+      .feature-card-3d {
+        position: relative;
+        transform-style: preserve-3d;
+        perspective: 1000px;
+      }
+      
+      .feature-card-3d::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+        border-radius: 1rem;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        transform: translateZ(-1px);
+      }
+      
+      .feature-card-3d:hover::before {
+        opacity: 1;
+      }
+      
+      .icon-3d-container {
+        transform-style: preserve-3d;
+        transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      
+      .feature-card-3d:hover .icon-3d-container {
+        transform: translateZ(30px) rotateY(10deg);
+      }
+      
+      .text-3d-lift {
+        transform: translateZ(0);
+        transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      
+      .feature-card-3d:hover .text-3d-lift {
+        transform: translateZ(20px);
+      }
+      
+      .glow-expansion {
+        position: absolute;
+        inset: -2px;
+        background: linear-gradient(45deg, 
+          rgba(59, 130, 246, 0.3), 
+          rgba(147, 51, 234, 0.3), 
+          rgba(59, 130, 246, 0.3));
+        border-radius: 1rem;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        filter: blur(8px);
+        z-index: -1;
+      }
+      
+      .feature-card-3d:hover .glow-expansion {
+        opacity: 1;
+        animation: glowPulse 2s ease-in-out infinite;
+      }
+      
+      @keyframes glowPulse {
+        0%, 100% { 
+          opacity: 0.6;
+          transform: scale(1);
+        }
+        50% { 
+          opacity: 1;
+          transform: scale(1.05);
+        }
+      }
+      
+      .depth-shadow {
+        box-shadow: 
+          0 1px 3px 0 rgba(0, 0, 0, 0.1),
+          0 1px 2px 0 rgba(0, 0, 0, 0.06),
+          0 0 0 1px rgba(59, 130, 246, 0.05);
+      }
+      
+      .depth-shadow:hover {
+        box-shadow: 
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04),
+          0 0 0 1px rgba(59, 130, 246, 0.1),
+          0 0 30px rgba(59, 130, 246, 0.2),
+          0 0 60px rgba(147, 51, 234, 0.1);
+      }
+      
+
+      
+      /* Responsive Typography */
+      @media (max-width: 768px) {
+        .hero-title {
+          font-size: clamp(2rem, 8vw, 3rem);
+          line-height: 1.2;
+        }
+        
+        .section-title {
+          font-size: clamp(1.5rem, 6vw, 2rem);
+          line-height: 1.3;
+        }
+        
+        .card-3d-lift:hover {
+          transform: translateY(-8px) translateZ(10px);
+        }
       }
     `;
     document.head.appendChild(style);
@@ -109,15 +948,15 @@ const App = () => {
 
       // Update nav style based on active section
       const sectionStyles = {
-        home: { background: 'rgba(0, 0, 0, 0.9)', borderColor: 'rgba(59, 130, 246, 0.5)', blur: 'blur(20px)' },
-        platforms: { background: 'rgba(0, 0, 0, 0.9)', borderColor: 'rgba(147, 51, 234, 0.5)', blur: 'blur(20px)' },
-        routing: { background: 'rgba(0, 0, 0, 0.9)', borderColor: 'rgba(34, 197, 94, 0.5)', blur: 'blur(20px)' },
-        onboarding: { background: 'rgba(0, 0, 0, 0.9)', borderColor: 'rgba(59, 130, 246, 0.5)', blur: 'blur(20px)' },
-        language: { background: 'rgba(0, 0, 0, 0.9)', borderColor: 'rgba(249, 115, 22, 0.5)', blur: 'blur(20px)' },
-        query: { background: 'rgba(0, 0, 0, 0.9)', borderColor: 'rgba(59, 130, 246, 0.5)', blur: 'blur(20px)' },
-        biconomy: { background: 'rgba(0, 0, 0, 0.9)', borderColor: 'rgba(147, 51, 234, 0.5)', blur: 'blur(20px)' },
-        features: { background: 'rgba(0, 0, 0, 0.9)', borderColor: 'rgba(59, 130, 246, 0.5)', blur: 'blur(20px)' },
-        cta: { background: 'rgba(0, 0, 0, 0.9)', borderColor: 'rgba(147, 51, 234, 0.5)', blur: 'blur(20px)' }
+        home: { background: 'transparent', borderColor: 'transparent', blur: 'none' },
+        platforms: { background: 'rgba(147, 51, 234, 0.1)', borderColor: 'rgba(147, 51, 234, 0.3)', blur: 'blur(20px)' },
+        routing: { background: 'rgba(34, 197, 94, 0.1)', borderColor: 'rgba(34, 197, 94, 0.3)', blur: 'blur(20px)' },
+        onboarding: { background: 'rgba(59, 130, 246, 0.1)', borderColor: 'rgba(59, 130, 246, 0.3)', blur: 'blur(20px)' },
+        language: { background: 'rgba(249, 115, 22, 0.1)', borderColor: 'rgba(249, 115, 22, 0.3)', blur: 'blur(20px)' },
+        query: { background: 'rgba(59, 130, 246, 0.1)', borderColor: 'rgba(59, 130, 246, 0.3)', blur: 'blur(20px)' },
+        biconomy: { background: 'rgba(147, 51, 234, 0.1)', borderColor: 'rgba(147, 51, 234, 0.3)', blur: 'blur(20px)' },
+        features: { background: 'rgba(59, 130, 246, 0.1)', borderColor: 'rgba(59, 130, 246, 0.3)', blur: 'blur(20px)' },
+        cta: { background: 'rgba(147, 51, 234, 0.1)', borderColor: 'rgba(147, 51, 234, 0.3)', blur: 'blur(20px)' }
       };
 
       setNavStyle(sectionStyles[currentSection] || { background: 'transparent', borderColor: 'transparent', blur: 'none' });
@@ -144,7 +983,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900/50 to-black relative overflow-hidden font-['Outfit'] antialiased">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900/50 to-black relative overflow-hidden font-general antialiased">
               {/* Enhanced Background with gradient overlay */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
@@ -178,64 +1017,30 @@ const App = () => {
               animate={{ opacity: 1, x: 0 }}
               className="flex items-center space-x-3"
             >
-              {/* Enhanced Robot head logo */}
-              <div className="relative w-10 h-10 bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-lg shadow-yellow-500/25">
-                <div className="w-5 h-5 bg-black rounded-full"></div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+              {/* Premium Sugama Robot Logo */}
+              <div className="flex items-center space-x-3">
+                <img 
+                  src="/robot_ultra_hd.png" 
+                  alt="Sugama Trade Logo" 
+                  className="w-10 h-10 object-cover rounded-lg shadow-lg"
+                />
+                <div className="text-lg font-['Clash_Display'] font-black bg-gradient-to-r from-pink-400 via-purple-500 to-violet-600 bg-clip-text text-transparent tracking-wider drop-shadow-2xl shadow-black/50 filter drop-shadow-lg hover:scale-105 transition-all duration-300 transform hover:translate-y-[-2px] hover:rotate-1">
+                  Sugama Trade
+                </div>
               </div>
-              <div className="text-2xl font-['Plus_Jakarta_Sans'] font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">Sugama Trade</div>
             </motion.div>
 
-            {/* Navigation Links */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="hidden lg:flex items-center space-x-8"
-            >
-              {[
-                { id: 'home', label: 'Home', color: 'blue' },
-                { id: 'platforms', label: 'Platforms', color: 'purple' },
-                { id: 'routing', label: 'Smart Routing', color: 'green' },
-                { id: 'onboarding', label: 'Onboarding', color: 'blue' },
-                { id: 'language', label: 'AI Trading', color: 'orange' },
-                { id: 'query', label: 'One Query', color: 'blue' },
-                { id: 'biconomy', label: 'Security', color: 'purple' },
-                { id: 'features', label: 'Features', color: 'blue' }
-              ].map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    const element = document.getElementById(item.id);
-                    if (element) {
-                      element.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }}
-                  className={`relative px-4 py-2 rounded-lg transition-all duration-300 font-medium text-sm ${
-                    activeSection === item.id
-                      ? `text-${item.color}-300 bg-${item.color}-500/20 border border-${item.color}-500/30`
-                      : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
-                  }`}
-                >
-                  {item.label}
-                  {activeSection === item.id && (
-                    <motion.div
-                      layoutId="activeSection"
-                      className={`absolute inset-0 bg-${item.color}-500/20 rounded-lg border border-${item.color}-500/30`}
-                      initial={false}
-                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    />
-                  )}
-                </button>
-              ))}
-            </motion.div>
+
 
             {/* Trade Button */}
-            <motion.button
+            <motion.a
+              href="https://t.me/sugamatradebot"
+              target="_blank"
+              rel="noopener noreferrer"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3 }}
-              className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-['Plus_Jakarta_Sans'] font-semibold py-3 px-8 rounded-2xl transition-all duration-500 flex items-center space-x-3 shadow-2xl hover:shadow-purple-500/25 transform hover:scale-105 overflow-hidden group"
+              className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-cabinet font-semibold py-3 px-8 rounded-2xl transition-all duration-500 flex items-center space-x-3 shadow-2xl hover:shadow-purple-500/25 transform hover:scale-105 overflow-hidden group tracking-wide cursor-pointer"
             >
               {/* Animated background */}
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-purple-600/0 to-pink-600/0 group-hover:from-blue-600/20 group-hover:via-purple-600/30 group-hover:to-pink-600/20 transition-all duration-700 transform group-hover:scale-150 group-hover:rotate-12"></div>
@@ -243,10 +1048,10 @@ const App = () => {
               {/* Content */}
               <div className="relative z-10 flex items-center space-x-3">
                 <Send className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                <span className="font-['Plus_Jakarta_Sans'] font-semibold">Trade Now</span>
+                <span className="font-cabinet font-semibold tracking-wide">Trade Now</span>
                 <Sparkles className="w-4 h-4 text-yellow-300 group-hover:rotate-180 transition-transform duration-500" />
               </div>
-            </motion.button>
+            </motion.a>
           </div>
         </div>
       </nav>
@@ -301,12 +1106,12 @@ const App = () => {
                 </h1>
                 
                 {/* Sub-headline */}
-                <p className="text-xl mb-8 text-blue-200 leading-relaxed font-['Outfit'] font-semibold">
+                <p className="text-xl mb-8 text-gray-300 leading-relaxed font-['Clash_Display'] font-medium tracking-wide">
                   Secure, gasless onboarding, and AI-assisted. Powered by Smart Sessions and intelligent trade execution.
                 </p>
                 
                 {/* Feature Description */}
-                <p className="text-lg mb-8 text-gray-200 leading-relaxed font-['Outfit'] font-medium">
+                <p className="text-lg mb-8 text-gray-400 leading-relaxed font-['Inter'] font-normal tracking-wide">
                   Real-time perp routing across the Base chain — optimized for execution price, fees, and funding using our custom scoring engine.
                 </p>
                 
@@ -315,6 +1120,11 @@ const App = () => {
                   <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 px-4 py-2 rounded-full border border-blue-500/30">
                     <span className="text-lg font-['Outfit'] font-medium text-blue-200">Live on</span>
                     <ArrowRight className="w-5 h-5 text-blue-300" />
+                    <img 
+                      src="/base.png" 
+                      alt="Base Logo" 
+                      className="w-6 h-6 object-contain"
+                    />
                     <span className="text-lg font-['Plus_Jakarta_Sans'] font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">BASE</span>
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                   </div>
@@ -397,10 +1207,10 @@ const App = () => {
               >
                 <div className="flex items-center space-x-20 mx-8">
                   {[
-                    { name: "Avantis", color: "blue" },
+                    { name: "Avantis", color: "green" },
                     { name: "Base", color: "purple" },
                     { name: "Sugama", color: "green" },
-                    { name: "Avantis", color: "yellow" },
+                    { name: "Avantis", color: "green" },
                     { name: "Base", color: "blue" },
                     { name: "Sugama", color: "purple" },
                     { name: "Avantis", color: "green" },
@@ -426,7 +1236,7 @@ const App = () => {
         </section>
 
         {/* Smart Routing Section */}
-        <section ref={routingRef} id="routing" className="py-20 bg-gray-900 relative overflow-hidden">
+        <section ref={routingRef} id="routing" className="py-20 bg-gray-900 relative overflow-hidden smart-routing-container">
           {/* Enhanced Background with gradient overlay */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900"></div>
@@ -435,11 +1245,13 @@ const App = () => {
                 backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M10 10h10v10H10zM30 10h10v10H30zM50 10h10v10H50zM10 30h10v10H10zM30 30h10v10H30zM50 30h10v10H50zM10 50h10v10H10zM30 50h10v10H30zM50 50h10v10H50z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
               }}></div>
             </div>
-            {/* Floating particles effect */}
+            {/* Enhanced Floating particles effect */}
             <div className="absolute inset-0 overflow-hidden">
               <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-green-500/30 rounded-full animate-pulse"></div>
-              <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-blue-500/40 rounded-full animate-ping"></div>
+              <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-emerald-500/40 rounded-full animate-ping"></div>
               <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-green-400/20 rounded-full animate-pulse"></div>
+              <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-teal-400/50 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
+              <div className="absolute top-3/4 right-1/4 w-1.5 h-1.5 bg-emerald-400/30 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
             </div>
           </div>
           
@@ -453,25 +1265,25 @@ const App = () => {
                 viewport={{ once: true }}
                 className="text-white"
               >
-                {/* Green Heading */}
-                <div className="text-green-400 font-['Outfit'] font-bold mb-4 flex items-center space-x-2">
+                {/* Enhanced Badge */}
+                <div className="smart-routing-badge">
                   <Target className="w-5 h-5" />
                   <span>Smart Routing Across Base</span>
                 </div>
                 
-                {/* Main Headline */}
-                <h2 className="text-4xl lg:text-5xl font-['Plus_Jakarta_Sans'] font-black mb-6 leading-tight">
+                {/* Enhanced Main Headline */}
+                <h2 className="smart-routing-title">
                   Maximize your returns with<br />
-                  <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">intelligent market selection</span>
+                  <span className="gradient-text">intelligent market selection</span>
                 </h2>
                 
-                {/* Description */}
-                <p className="text-lg text-gray-200 leading-relaxed font-['Outfit'] font-medium">
+                {/* Enhanced Description */}
+                <p className="smart-routing-description">
                   We compare spread, impact, funding fees, and gas to route you to the best execution venue.
                 </p>
               </motion.div>
               
-              {/* Right Side - Chat Interface Mockup */}
+              {/* Right Side - Enhanced Chat Interface Mockup */}
               <motion.div
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -479,58 +1291,96 @@ const App = () => {
                 viewport={{ once: true }}
                 className="relative flex justify-center lg:justify-end"
               >
-                {/* Smartphone/Chat Interface */}
-                <div className="relative w-80 h-96 bg-green-100 rounded-3xl border-2 border-white p-4 shadow-2xl">
-                  {/* Doodle Background Pattern */}
-                  <div className="absolute inset-0 opacity-10">
-                    <div className="w-full h-full" style={{
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='20' cy='20' r='3'/%3E%3Ccircle cx='80' cy='30' r='2'/%3E%3Ccircle cx='40' cy='70' r='4'/%3E%3Cpath d='M10 50 Q30 30 50 50 T90 50' stroke='%23000000' stroke-width='1' fill='none'/%3E%3Cpath d='M15 80 Q35 60 55 80 T95 80' stroke='%23000000' stroke-width='1' fill='none'/%3E%3C/g%3E%3C/svg%3E")`,
-                    }}></div>
-                  </div>
-                  
-                  {/* Chat Content */}
-                  <div className="relative z-10 h-full flex flex-col justify-between">
-                    {/* Chat Bubbles */}
-                    <div className="space-y-4 mt-4">
-                      {/* User Message */}
-                      <div className="flex justify-end">
-                        <div className="flex items-end space-x-2">
-                          <div className="bg-gray-200 rounded-2xl px-4 py-2 max-w-xs">
-                            <p className="text-gray-800 text-sm">Find me the best market for a $100,000 BTC long.</p>
-                          </div>
-                          <div className="w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center">
-                            <div className="w-4 h-4 bg-white rounded-full"></div>
+                <div className="smart-routing-chat-container">
+                  <div className="smart-routing-chat-inner w-80 h-96 p-4">
+                    {/* Floating Elements */}
+                    <div className="floating-elements">
+                      <div 
+                        className="floating-element" 
+                        style={{
+                          width: '6px',
+                          height: '6px',
+                          background: '#22c55e',
+                          top: '10%',
+                          left: '15%',
+                          animationDelay: '0s'
+                        }}
+                      ></div>
+                      <div 
+                        className="floating-element" 
+                        style={{
+                          width: '4px',
+                          height: '4px',
+                          background: '#10b981',
+                          top: '70%',
+                          right: '20%',
+                          animationDelay: '1s'
+                        }}
+                      ></div>
+                      <div 
+                        className="floating-element" 
+                        style={{
+                          width: '5px',
+                          height: '5px',
+                          background: '#059669',
+                          bottom: '20%',
+                          left: '25%',
+                          animationDelay: '2s'
+                        }}
+                      ></div>
+                    </div>
+                    
+                    {/* Doodle Background Pattern */}
+                    <div className="absolute inset-0 opacity-10">
+                      <div className="w-full h-full" style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='20' cy='20' r='3'/%3E%3Ccircle cx='80' cy='30' r='2'/%3E%3Ccircle cx='40' cy='70' r='4'/%3E%3Cpath d='M10 50 Q30 30 50 50 T90 50' stroke='%23000000' stroke-width='1' fill='none'/%3E%3Cpath d='M15 80 Q35 60 55 80 T95 80' stroke='%23000000' stroke-width='1' fill='none'/%3E%3C/g%3E%3C/svg%3E")`,
+                      }}></div>
+                    </div>
+                    
+                    {/* Chat Content */}
+                    <div className="relative z-10 h-full flex flex-col justify-between">
+                      {/* Chat Bubbles */}
+                      <div className="space-y-4 mt-4">
+                        {/* User Message */}
+                        <div className="flex justify-end">
+                          <div className="flex items-end space-x-2">
+                            <div className="chat-bubble bg-gray-200 rounded-2xl px-4 py-2 max-w-xs">
+                              <p className="text-gray-800 text-sm">Find me the best market for a $100,000 BTC long.</p>
+                            </div>
+                            <div className="w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center">
+                              <div className="w-4 h-4 bg-white rounded-full"></div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      
-                      {/* Bot Response */}
-                      <div className="flex justify-start">
-                        <div className="flex items-start space-x-2">
-                          <div className="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center">
-                            <div className="w-4 h-4 bg-yellow-400 rounded-full"></div>
-                          </div>
-                          <div className="bg-gray-200 rounded-2xl px-4 py-3 max-w-xs">
-                            <p className="text-gray-800 text-sm mb-2">Found 2 optimal markets that could reduce your opening slippage and funding costs.</p>
-                            <div className="flex items-center space-x-2">
-                              <BarChart3 className="w-4 h-4 text-blue-500" />
-                              <span className="text-blue-600 text-sm font-medium">Estimated savings: $980–$1,050 on this position.</span>
+                        
+                        {/* Bot Response */}
+                        <div className="flex justify-start">
+                          <div className="flex items-start space-x-2">
+                            <div className="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center">
+                              <div className="w-4 h-4 bg-yellow-400 rounded-full"></div>
+                            </div>
+                            <div className="chat-bubble bg-gray-200 rounded-2xl px-4 py-3 max-w-xs">
+                              <p className="text-gray-800 text-sm mb-2">Found 2 optimal markets that could reduce your opening slippage and funding costs.</p>
+                              <div className="flex items-center space-x-2">
+                                <BarChart3 className="w-4 h-4 text-blue-500" />
+                                <span className="text-blue-600 text-sm font-medium">Estimated savings: $980–$1,050 on this position.</span>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    
-                    {/* Action Buttons */}
-                    <div className="flex space-x-3 mt-6">
-                      <button className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-3 px-4 rounded-xl transition-colors duration-300 flex items-center justify-center space-x-2">
-                        <BarChart3 className="w-4 h-4 text-blue-500" />
-                        <span className="text-sm">Show Best Markets</span>
-                      </button>
-                      <button className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-3 px-4 rounded-xl transition-colors duration-300 flex items-center justify-center space-x-2">
-                        <Check className="w-4 h-4 text-green-500" />
-                        <span className="text-sm">Proceed Trade</span>
-                      </button>
+                      
+                      {/* Action Buttons */}
+                      <div className="flex space-x-3 mt-6">
+                        <button className="action-button flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-3 px-4 rounded-xl transition-colors duration-300 flex items-center justify-center space-x-2">
+                          <BarChart3 className="w-4 h-4 text-blue-500" />
+                          <span className="text-sm">Show Best Markets</span>
+                        </button>
+                        <button className="action-button flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-3 px-4 rounded-xl transition-colors duration-300 flex items-center justify-center space-x-2">
+                          <Check className="w-4 h-4 text-green-500" />
+                          <span className="text-sm">Proceed Trade</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -847,35 +1697,83 @@ const App = () => {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-['Space_Grotesk'] font-bold text-white mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+              <h2 className="hero-title text-center mb-4 animate-text-glow">
                 Advanced Trading Features
               </h2>
-              <p className="text-xl text-blue-400 max-w-3xl mx-auto">
+              <p className="text-xl text-gradient-tech max-w-3xl mx-auto font-albert font-medium tracking-wide">
                 Experience the future of decentralized trading with our cutting-edge platform
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 {
-                  icon: <Shield className="w-8 h-8" />,
+                  icon: <Shield className="w-6 h-6" />,
                   title: "Secure Trading",
-                  description: "Advanced security protocols and smart contract audits"
+                  description: "Advanced security protocols and smart contract audits",
+                  colors: {
+                    borderColor1: '#10b981',
+                    borderColor2: '#059669',
+                    borderColor3: '#34d399',
+                    bgColor1: 'rgba(16, 185, 129, 0.1)',
+                    bgColor2: 'rgba(5, 150, 105, 0.1)',
+                    iconBg1: 'rgba(16, 185, 129, 0.2)',
+                    iconBg2: 'rgba(5, 150, 105, 0.2)',
+                    iconColor: '#10b981',
+                    iconHoverColor: '#34d399',
+                    textHoverColor: '#34d399'
+                  }
                 },
                 {
-                  icon: <Zap className="w-8 h-8" />,
+                  icon: <Zap className="w-6 h-6" />,
                   title: "Lightning Fast",
-                  description: "Sub-second execution with optimized routing"
+                  description: "Sub-second execution with optimized routing",
+                  colors: {
+                    borderColor1: '#f59e0b',
+                    borderColor2: '#d97706',
+                    borderColor3: '#fbbf24',
+                    bgColor1: 'rgba(245, 158, 11, 0.1)',
+                    bgColor2: 'rgba(217, 119, 6, 0.1)',
+                    iconBg1: 'rgba(245, 158, 11, 0.2)',
+                    iconBg2: 'rgba(217, 119, 6, 0.2)',
+                    iconColor: '#f59e0b',
+                    iconHoverColor: '#fbbf24',
+                    textHoverColor: '#fbbf24'
+                  }
                 },
                 {
-                  icon: <TrendingUp className="w-8 h-8" />,
+                  icon: <TrendingUp className="w-6 h-6" />,
                   title: "AI Assisted",
-                  description: "Intelligent trade execution and risk management"
+                  description: "Intelligent trade execution and risk management",
+                  colors: {
+                    borderColor1: '#8b5cf6',
+                    borderColor2: '#7c3aed',
+                    borderColor3: '#a78bfa',
+                    bgColor1: 'rgba(139, 92, 246, 0.1)',
+                    bgColor2: 'rgba(124, 58, 237, 0.1)',
+                    iconBg1: 'rgba(139, 92, 246, 0.2)',
+                    iconBg2: 'rgba(124, 58, 237, 0.2)',
+                    iconColor: '#8b5cf6',
+                    iconHoverColor: '#a78bfa',
+                    textHoverColor: '#a78bfa'
+                  }
                 },
                 {
-                  icon: <Globe className="w-8 h-8" />,
+                  icon: <Globe className="w-6 h-6" />,
                   title: "Base Chain",
-                  description: "Built on Ethereum L2 for low fees and high speed"
+                  description: "Built on Ethereum L2 for low fees and high speed",
+                  colors: {
+                    borderColor1: '#06b6d4',
+                    borderColor2: '#0891b2',
+                    borderColor3: '#22d3ee',
+                    bgColor1: 'rgba(6, 182, 212, 0.1)',
+                    bgColor2: 'rgba(8, 145, 178, 0.1)',
+                    iconBg1: 'rgba(6, 182, 212, 0.2)',
+                    iconBg2: 'rgba(8, 145, 178, 0.2)',
+                    iconColor: '#06b6d4',
+                    iconHoverColor: '#22d3ee',
+                    textHoverColor: '#22d3ee'
+                  }
                 }
               ].map((feature, index) => (
                 <motion.div
@@ -884,38 +1782,69 @@ const App = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl p-8 border border-gray-700/50 hover:border-blue-500/50 transition-all duration-500 group backdrop-blur-sm shadow-xl hover:shadow-2xl transform hover:scale-110 overflow-hidden"
+                  className="feature-card-enhanced"
+                  style={{
+                    '--border-color-1': feature.colors.borderColor1,
+                    '--border-color-2': feature.colors.borderColor2,
+                    '--border-color-3': feature.colors.borderColor3,
+                    '--bg-color-1': feature.colors.bgColor1,
+                    '--bg-color-2': feature.colors.bgColor2,
+                    '--icon-bg-1': feature.colors.iconBg1,
+                    '--icon-bg-2': feature.colors.iconBg2,
+                    '--icon-color': feature.colors.iconColor,
+                    '--icon-hover-color': feature.colors.iconHoverColor,
+                    '--text-hover-color': feature.colors.textHoverColor
+                  }}
                 >
-                  {/* Moving Background Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-purple-600/0 to-blue-600/0 group-hover:from-blue-600/20 group-hover:via-purple-600/30 group-hover:to-blue-600/20 transition-all duration-700 transform group-hover:scale-150 group-hover:rotate-12"></div>
-                  
-                  {/* Animated Border */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/0 via-purple-500/0 to-blue-500/0 group-hover:from-blue-500/50 group-hover:via-purple-500/70 group-hover:to-blue-500/50 transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
-                  
-                  {/* Floating Particles */}
-                  <div className="absolute inset-0 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <div className="absolute top-4 left-4 w-2 h-2 bg-blue-400 rounded-full animate-ping group-hover:animate-bounce"></div>
-                    <div className="absolute top-8 right-6 w-1 h-1 bg-purple-400 rounded-full animate-pulse group-hover:animate-ping"></div>
-                    <div className="absolute bottom-6 left-8 w-1.5 h-1.5 bg-blue-300 rounded-full animate-pulse group-hover:animate-bounce"></div>
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="relative z-10">
-                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-blue-500/40 group-hover:to-purple-500/40 group-hover:scale-110 transition-all duration-500 shadow-lg group-hover:shadow-2xl">
-                      <div className="text-blue-400 group-hover:text-blue-200 group-hover:scale-110 transition-all duration-500">
-                        {feature.icon}
-                      </div>
+                  <div className="card-inner">
+                    {/* Floating Particles */}
+                    <div className="particles">
+                      <div 
+                        className="particle" 
+                        style={{
+                          width: '4px',
+                          height: '4px',
+                          background: feature.colors.iconColor,
+                          top: '20%',
+                          left: '20%',
+                          animationDelay: '0s'
+                        }}
+                      ></div>
+                      <div 
+                        className="particle" 
+                        style={{
+                          width: '3px',
+                          height: '3px',
+                          background: feature.colors.iconHoverColor,
+                          top: '60%',
+                          right: '25%',
+                          animationDelay: '1s'
+                        }}
+                      ></div>
+                      <div 
+                        className="particle" 
+                        style={{
+                          width: '2px',
+                          height: '2px',
+                          background: feature.colors.borderColor2,
+                          bottom: '30%',
+                          left: '30%',
+                          animationDelay: '2s'
+                        }}
+                      ></div>
                     </div>
-                    <h3 className="text-xl font-['Space_Grotesk'] font-semibold text-white mb-3 text-center group-hover:text-blue-200 transition-colors duration-500">
-                      {feature.title}
-                    </h3>
-                    <p className="text-gray-400 text-center group-hover:text-gray-300 transition-colors duration-500">
-                      {feature.description}
-                    </p>
+                    
+                    {/* Icon Container */}
+                    <div className="icon-container">
+                      {feature.icon}
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="content">
+                      <h3>{feature.title}</h3>
+                      <p>{feature.description}</p>
+                    </div>
                   </div>
-                  
-                  {/* Glow Effect */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/0 via-purple-500/0 to-blue-500/0 group-hover:from-blue-500/10 group-hover:via-purple-500/15 group-hover:to-blue-500/10 transition-all duration-500 blur-xl"></div>
                 </motion.div>
               ))}
             </div>
@@ -953,94 +1882,231 @@ const App = () => {
               <p className="text-xl text-blue-300 mb-8">
                 Join thousands of traders using the most advanced perpetual trading platform on Base
               </p>
-              <button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-10 rounded-xl text-lg transition-all duration-300 flex items-center mx-auto space-x-2 shadow-2xl hover:shadow-3xl transform hover:scale-105">
-                <Send className="w-5 h-5" />
-                <span>Start Trading Now</span>
-              </button>
+              <a href="https://t.me/sugamatradebot" target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 cursor-pointer overflow-hidden">
+                {/* Animated background */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-purple-600/0 to-pink-600/0 group-hover:from-blue-600/20 group-hover:via-purple-600/30 group-hover:to-pink-600/20 transition-all duration-500 transform group-hover:scale-110"></div>
+                
+                {/* Border glow */}
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/50 to-purple-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
+                
+                {/* Content */}
+                <div className="relative z-10 flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                  <span className="font-semibold tracking-wide">Launch Sugama Trade</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                </div>
+              </a>
             </motion.div>
           </div>
         </section>
 
         {/* Footer */}
-        <footer className="bg-black border-l-4 border-purple-500 py-16">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-4 gap-8">
+        <footer className="bg-gradient-to-br from-gray-900 via-black to-gray-900 border-t border-gray-800 py-20 relative overflow-hidden">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="w-full h-full" style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M10 10h10v10H10zM30 10h10v10H30zM50 10h10v10H50zM10 30h10v10H10zM30 30h10v10H30zM50 30h10v10H50zM10 50h10v10H10zM30 50h10v10H30zM50 50h10v10H50z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}></div>
+          </div>
+          
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-12">
               {/* Column 1 - Brand & Mission */}
-              <div className="md:col-span-1">
-                {/* Logo */}
-                <div className="flex items-center space-x-3 mb-6">
-                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                    <div className="w-4 h-4 bg-black rounded-full"></div>
+              <div className="lg:col-span-1">
+                                {/* Premium Enhanced Logo */}
+                <div className="flex items-center space-x-4 mb-8">
+                  <div className="relative">
+                    <img 
+                      src="/robot_ultra_hd.png" 
+                      alt="Sugama Trade Logo" 
+                      className="w-12 h-12 object-cover rounded-xl shadow-xl"
+                    />
+                    {/* Premium glow effect */}
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                  <div className="text-2xl font-['Space_Grotesk'] font-bold text-white">SugamaTrade</div>
+                                                                     <div className="text-2xl font-['Clash_Display'] font-black bg-gradient-to-r from-pink-400 via-purple-500 to-violet-600 bg-clip-text text-transparent tracking-wider drop-shadow-2xl shadow-black/50 filter drop-shadow-lg hover:scale-105 transition-all duration-300 transform hover:translate-y-[-2px] hover:rotate-1">
+                   Sugama Trade
+                 </div>
                 </div>
                 
-                {/* Mission */}
-                <div className="mb-6">
-                  <h3 className="text-gray-400 font-['Space_Grotesk'] font-semibold mb-2">Our Mission</h3>
-                  <p className="text-white">We believe in complete decentralization.</p>
+                {/* Enhanced Mission */}
+                <div className="mb-8">
+                  <h3 className="text-base font-['Cabinet_Grotesk'] font-semibold text-white mb-2 flex items-center">
+                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
+                    Our Mission
+                  </h3>
+                  <p className="text-gray-300 font-['Inter'] leading-relaxed text-sm">
+                    We believe in complete decentralization, empowering traders with cutting-edge technology and transparent, secure trading experiences.
+                  </p>
                 </div>
                 
-                {/* Contact */}
-                <div className="mb-6">
-                  <h3 className="text-gray-400 font-['Space_Grotesk'] font-semibold mb-4">Contact Us</h3>
-                  <div className="flex space-x-3">
-                    <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                      <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                      </svg>
-                    </div>
-                    <div className="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center">
-                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-                      </svg>
-                    </div>
-                    <div className="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center">
-                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                      </svg>
-                    </div>
-                    <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
-                      </svg>
-                    </div>
+                {/* Enhanced Social Links */}
+                <div>
+                  <h3 className="text-lg font-['Cabinet_Grotesk'] font-semibold text-white mb-4 flex items-center">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                    Connect With Us
+                  </h3>
+                  <div className="flex space-x-6">
+                    {/* Premium Twitter/X */}
+                    <a href="https://x.com/sugamatrade" target="_blank" rel="noopener noreferrer" className="group relative">
+                      <div className="relative w-14 h-14 bg-gradient-to-br from-black via-gray-900 to-black rounded-2xl flex items-center justify-center shadow-2xl group-hover:shadow-blue-500/30 transition-all duration-500 group-hover:scale-110 overflow-hidden">
+                        {/* Animated background */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-blue-400/0 to-blue-600/0 group-hover:from-blue-500/20 group-hover:via-blue-400/30 group-hover:to-blue-600/20 transition-all duration-700 transform group-hover:scale-150 group-hover:rotate-12"></div>
+                        {/* Border glow */}
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-400/0 to-blue-600/0 group-hover:from-blue-400/50 group-hover:to-blue-600/50 transition-all duration-500"></div>
+                        {/* Icon */}
+                        <svg className="relative z-10 w-7 h-7 text-white group-hover:text-blue-300 transition-all duration-300" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                        {/* Floating particles */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                          <div className="absolute top-2 left-2 w-1 h-1 bg-blue-400 rounded-full animate-ping"></div>
+                          <div className="absolute bottom-2 right-2 w-1 h-1 bg-blue-300 rounded-full animate-ping" style={{animationDelay: '0.5s'}}></div>
+                        </div>
+                      </div>
+                    </a>
+                    
+                    {/* Premium Telegram */}
+                    <a href="https://t.me/sugamatradebot" target="_blank" rel="noopener noreferrer" className="group relative">
+                      <div className="relative w-14 h-14 bg-gradient-to-br from-black via-gray-900 to-black rounded-2xl flex items-center justify-center shadow-2xl group-hover:shadow-blue-500/30 transition-all duration-500 group-hover:scale-110 overflow-hidden">
+                        {/* Animated background */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-cyan-400/0 to-blue-600/0 group-hover:from-blue-500/20 group-hover:via-cyan-400/30 group-hover:to-blue-600/20 transition-all duration-700 transform group-hover:scale-150 group-hover:rotate-12"></div>
+                        {/* Border glow */}
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-400/0 to-cyan-500/0 group-hover:from-blue-400/50 group-hover:to-cyan-500/50 transition-all duration-500"></div>
+                        {/* Icon */}
+                        <svg className="relative z-10 w-7 h-7 text-white group-hover:text-cyan-300 transition-all duration-300" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.479 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                        </svg>
+                        {/* Floating particles */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                          <div className="absolute top-2 left-2 w-1 h-1 bg-cyan-400 rounded-full animate-ping"></div>
+                          <div className="absolute bottom-2 right-2 w-1 h-1 bg-blue-300 rounded-full animate-ping" style={{animationDelay: '0.5s'}}></div>
+                        </div>
+                      </div>
+                    </a>
+                    
+                    {/* Premium Website */}
+                    <a href="https://www.sugamatrade.xyz" target="_blank" rel="noopener noreferrer" className="group relative">
+                      <div className="relative w-14 h-14 bg-gradient-to-br from-black via-gray-900 to-black rounded-2xl flex items-center justify-center shadow-2xl group-hover:shadow-purple-500/30 transition-all duration-500 group-hover:scale-110 overflow-hidden">
+                        {/* Animated background */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 via-indigo-400/0 to-purple-600/0 group-hover:from-purple-500/20 group-hover:via-indigo-400/30 group-hover:to-purple-600/20 transition-all duration-700 transform group-hover:scale-150 group-hover:rotate-12"></div>
+                        {/* Border glow */}
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-400/0 to-indigo-500/0 group-hover:from-purple-400/50 group-hover:to-indigo-500/50 transition-all duration-500"></div>
+                        {/* Earth/Globe Icon */}
+                        <svg className="relative z-10 w-7 h-7 text-white group-hover:text-purple-300 transition-all duration-300" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                        {/* Floating particles */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                          <div className="absolute top-2 left-2 w-1 h-1 bg-purple-400 rounded-full animate-ping"></div>
+                          <div className="absolute bottom-2 right-2 w-1 h-1 bg-indigo-300 rounded-full animate-ping" style={{animationDelay: '0.5s'}}></div>
+                        </div>
+                      </div>
+                    </a>
                   </div>
                 </div>
               </div>
               
               {/* Column 2 - Sugama */}
               <div>
-                <h3 className="text-gray-400 font-['Space_Grotesk'] font-semibold mb-4">Sugama</h3>
-                <ul className="space-y-2 text-white">
-                  <li><a href="#" className="hover:text-gray-300 transition-colors">About us</a></li>
+                <h3 className="text-xl font-['Clash_Display'] font-bold text-white mb-6 flex items-center">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                  Sugama
+                </h3>
+                <ul className="space-y-4">
+                  <li>
+                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-['Inter'] text-lg flex items-center group">
+                      <div className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></div>
+                      About Us
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-['Inter'] text-lg flex items-center group">
+                      <div className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></div>
+                      Our Team
+                    </a>
+                  </li>
+
                 </ul>
               </div>
               
-              {/* Column 3 - Design to Code Tools */}
+              {/* Column 3 - Development Tools */}
               <div>
-                <h3 className="text-gray-400 font-['Space_Grotesk'] font-semibold mb-4">Design to code tools</h3>
-                <ul className="space-y-2 text-white">
-                  <li><a href="#" className="hover:text-gray-300 transition-colors">Telegram</a></li>
-                  <li><a href="#" className="hover:text-gray-300 transition-colors">VS Code</a></li>
-                  <li><a href="#" className="hover:text-gray-300 transition-colors">Base Explorer</a></li>
+                <h3 className="text-xl font-['Clash_Display'] font-bold text-white mb-6 flex items-center">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                  Development Tools
+                </h3>
+                <ul className="space-y-4">
+                  <li>
+                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-['Inter'] text-lg flex items-center group">
+                      <div className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-purple-500 transition-colors"></div>
+                      Telegram Bot
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://t.me/sugamatrader" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors duration-300 font-['Inter'] text-lg flex items-center group">
+                      <div className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-purple-500 transition-colors"></div>
+                      Social Trade
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-['Inter'] text-lg flex items-center group">
+                      <div className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-purple-500 transition-colors"></div>
+                      Base Explorer
+                    </a>
+                  </li>
                 </ul>
               </div>
               
               {/* Column 4 - Community */}
               <div>
-                <h3 className="text-gray-400 font-['Space_Grotesk'] font-semibold mb-4">Commmunity</h3>
-                <ul className="space-y-2 text-white">
-                  <li><a href="#" className="hover:text-gray-300 transition-colors">GitHub</a></li>
+                <h3 className="text-xl font-['Clash_Display'] font-bold text-white mb-6 flex items-center">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Community
+                </h3>
+                <ul className="space-y-4">
+                  <li>
+                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-['Inter'] text-lg flex items-center group">
+                      <div className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-green-500 transition-colors"></div>
+                      GitHub Repository
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-['Inter'] text-lg flex items-center group">
+                      <div className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-green-500 transition-colors"></div>
+                      Documentation
+                    </a>
+                  </li>
+
                 </ul>
               </div>
             </div>
             
-            <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-              <p>&copy; 2024 SugamaTrade. All rights reserved.</p>
+            {/* Enhanced Copyright */}
+            <div className="border-t border-gray-800 mt-16 pt-8">
+              <div className="flex flex-col md:flex-row justify-between items-center">
+                <div className="text-gray-400 font-['Inter'] text-center md:text-left mb-4 md:mb-0">
+                  <p>&copy; 2024 Sugama Trade. All rights reserved. Built with ❤️ for the decentralized future.</p>
+                </div>
+                <div className="flex space-x-6 text-sm text-gray-400 font-['Inter']">
+                  <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+                  <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+                  <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
+                </div>
+              </div>
             </div>
           </div>
         </footer>
+
+        {/* Cursor Following Div */}
+        <div 
+          className="fixed pointer-events-none z-50 w-4 h-4 bg-white rounded-full shadow-lg transition-transform duration-100 ease-out"
+          style={{
+            left: cursorPosition.x - 8,
+            top: cursorPosition.y - 8,
+            transform: 'translate(0, 0)'
+          }}
+        />
       </div>
     </div>
   );
