@@ -88,13 +88,19 @@ const App = () => {
   });
   const [heroBlend, setHeroBlend] = useState(0);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   
 
 
-  // Simple cursor following div
+  // Simple cursor following div with error handling
   useEffect(() => {
     const handleMouseMove = (e) => {
-      setCursorPosition({ x: e.clientX, y: e.clientY });
+      try {
+        setCursorPosition({ x: e.clientX, y: e.clientY });
+      } catch (err) {
+        console.error('Error updating cursor position:', err);
+      }
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -104,44 +110,52 @@ const App = () => {
     };
   }, []);
 
-  // Cursor following effect for 3D cards
+  // Cursor following effect for 3D cards with error handling
   useEffect(() => {
     const handleMouseMove = (e) => {
-      const cards = document.querySelectorAll('.card-3d-lift');
-      
-      cards.forEach(card => {
-        const rect = card.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
+      try {
+        const cards = document.querySelectorAll('.card-3d-lift');
         
-        // Calculate distance from cursor to card center
-        const deltaX = e.clientX - centerX;
-        const deltaY = e.clientY - centerY;
-        
-        // Calculate rotation based on mouse position
-        const rotateX = (deltaY / (rect.height / 2)) * -10; // Max 10 degrees
-        const rotateY = (deltaX / (rect.width / 2)) * 10;   // Max 10 degrees
-        
-        // Apply the rotation using CSS custom properties
-        card.style.setProperty('--rotate-x', `${rotateX}deg`);
-        card.style.setProperty('--rotate-y', `${rotateY}deg`);
-        
-        // Add cursor-follow class when hovering
-        if (e.target.closest('.card-3d-lift') === card) {
-          card.classList.add('cursor-follow');
-        } else {
-          card.classList.remove('cursor-follow');
-        }
-      });
+        cards.forEach(card => {
+          const rect = card.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          
+          // Calculate distance from cursor to card center
+          const deltaX = e.clientX - centerX;
+          const deltaY = e.clientY - centerY;
+          
+          // Calculate rotation based on mouse position
+          const rotateX = (deltaY / (rect.height / 2)) * -10; // Max 10 degrees
+          const rotateY = (deltaX / (rect.width / 2)) * 10;   // Max 10 degrees
+          
+          // Apply the rotation using CSS custom properties
+          card.style.setProperty('--rotate-x', `${rotateX}deg`);
+          card.style.setProperty('--rotate-y', `${rotateY}deg`);
+          
+          // Add cursor-follow class when hovering
+          if (e.target.closest('.card-3d-lift') === card) {
+            card.classList.add('cursor-follow');
+          } else {
+            card.classList.remove('cursor-follow');
+          }
+        });
+      } catch (err) {
+        console.error('Error in 3D card effect:', err);
+      }
     };
 
     const handleMouseLeave = () => {
-      const cards = document.querySelectorAll('.card-3d-lift');
-      cards.forEach(card => {
-        card.classList.remove('cursor-follow');
-        card.style.setProperty('--rotate-x', '0deg');
-        card.style.setProperty('--rotate-y', '0deg');
-      });
+      try {
+        const cards = document.querySelectorAll('.card-3d-lift');
+        cards.forEach(card => {
+          card.classList.remove('cursor-follow');
+          card.style.setProperty('--rotate-x', '0deg');
+          card.style.setProperty('--rotate-y', '0deg');
+        });
+      } catch (err) {
+        console.error('Error in mouse leave handler:', err);
+      }
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -164,26 +178,44 @@ const App = () => {
   const featuresRef = useRef(null);
   const ctaRef = useRef(null);
 
-  // Load World's Best Premium Fonts
+        // Load World's Best Premium Fonts including Noto Serif Devanagari
   useEffect(() => {
-    // Load multiple premium font families
-    const fontLinks = [
-      // Clash Display - Premium display font
-      'https://fonts.cdnfonts.com/css/clash-display',
-      // General Sans - Modern geometric sans-serif
-      'https://fonts.cdnfonts.com/css/general-sans',
-      // Cabinet Grotesk - Premium variable font
-      'https://fonts.cdnfonts.com/css/cabinet-grotesk',
-      // Google Fonts - Premium selections
-      'https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@100;200;300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800&family=Albert+Sans:wght@100;200;300;400;500;600;700;800;900&family=Onest:wght@100;200;300;400;500;600;700;800;900&family=Geist:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap'
-    ];
+    const loadFonts = async () => {
+      try {
+        setIsLoading(true);
+        // Load multiple premium font families
+        const fontLinks = [
+          // Clash Display - Premium display font
+          'https://fonts.cdnfonts.com/css/clash-display',
+          // General Sans - Modern geometric sans-serif
+          'https://fonts.cdnfonts.com/css/general-sans',
+          // Cabinet Grotesk - Premium variable font
+          'https://fonts.cdnfonts.com/css/cabinet-grotesk',
+          // Google Fonts - Premium selections including Noto Serif Devanagari
+          'https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@100;200;300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800&family=Albert+Sans:wght@100;200;300;400;500;600;700;800;900&family=Onest:wght@100;200;300;400;500;600;700;800;900&family=Geist:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&family=Noto+Serif+Devanagari:wght@100;200;300;400;500;600;700;800;900&display=swap'
+        ];
 
-    fontLinks.forEach(href => {
-      const link = document.createElement('link');
-      link.href = href;
-      link.rel = 'stylesheet';
-      document.head.appendChild(link);
-    });
+        const loadPromises = fontLinks.map(href => {
+          return new Promise((resolve, reject) => {
+            const link = document.createElement('link');
+            link.href = href;
+            link.rel = 'stylesheet';
+            link.onload = resolve;
+            link.onerror = reject;
+            document.head.appendChild(link);
+          });
+        });
+
+        await Promise.all(loadPromises);
+        setIsLoading(false);
+      } catch (err) {
+        console.error('Error loading fonts:', err);
+        setError('Failed to load fonts');
+        setIsLoading(false);
+      }
+    };
+
+    loadFonts();
     
     // Add sophisticated typography styles and animations
     const style = document.createElement('style');
@@ -196,6 +228,7 @@ const App = () => {
       .font-onest { font-family: 'Onest', sans-serif; }
       .font-geist { font-family: 'Geist', sans-serif; }
       .font-jetbrains { font-family: 'JetBrains Mono', monospace; }
+      .font-devanagari { font-family: 'Noto Serif Devanagari', serif; }
       
       /* Advanced Text Gradients */
       .text-gradient-primary {
@@ -292,7 +325,7 @@ const App = () => {
       
       /* Premium Typography Classes */
       .hero-title {
-        font-family: 'Clash Display', sans-serif;
+        font-family: 'Noto Serif Devanagari', serif;
         font-weight: 700;
         font-size: clamp(2.5rem, 5vw, 4.5rem);
         line-height: 1.1;
@@ -304,7 +337,7 @@ const App = () => {
       }
       
       .section-title {
-        font-family: 'General Sans', sans-serif;
+        font-family: 'Noto Serif Devanagari', serif;
         font-weight: 600;
         font-size: clamp(1.8rem, 3vw, 2.5rem);
         line-height: 1.2;
@@ -312,14 +345,14 @@ const App = () => {
       }
       
       .body-text {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Noto Serif Devanagari', serif;
         font-weight: 400;
         line-height: 1.6;
         letter-spacing: 0.01em;
       }
       
       .accent-text {
-        font-family: 'Cabinet Grotesk', sans-serif;
+        font-family: 'Noto Serif Devanagari', serif;
         font-weight: 500;
         letter-spacing: 0.02em;
       }
@@ -481,7 +514,7 @@ const App = () => {
       }
       
       .feature-card-enhanced h3 {
-        font-family: 'Cabinet Grotesk', sans-serif;
+        font-family: 'Noto Serif Devanagari', serif;
         font-weight: 600;
         font-size: 1.1rem;
         color: white;
@@ -497,7 +530,7 @@ const App = () => {
       }
       
       .feature-card-enhanced p {
-        font-family: 'Albert Sans', sans-serif;
+        font-family: 'Noto Serif Devanagari', serif;
         font-size: 0.875rem;
         color: #9ca3af;
         text-align: center;
@@ -623,7 +656,7 @@ const App = () => {
       }
       
       .smart-routing-title {
-        font-family: 'Clash Display', sans-serif;
+        font-family: 'Noto Serif Devanagari', serif;
         font-weight: 800;
         font-size: clamp(2.5rem, 5vw, 4rem);
         line-height: 1.1;
@@ -656,7 +689,7 @@ const App = () => {
       }
       
       .smart-routing-description {
-        font-family: 'Albert Sans', sans-serif;
+        font-family: 'Noto Serif Devanagari', serif;
         font-size: 1.125rem;
         line-height: 1.7;
         color: #d1d5db;
@@ -898,11 +931,13 @@ const App = () => {
       /* Responsive Typography */
       @media (max-width: 768px) {
         .hero-title {
+          font-family: 'Noto Serif Devanagari', serif;
           font-size: clamp(2rem, 8vw, 3rem);
           line-height: 1.2;
         }
         
         .section-title {
+          font-family: 'Noto Serif Devanagari', serif;
           font-size: clamp(1.5rem, 6vw, 2rem);
           line-height: 1.3;
         }
@@ -982,8 +1017,38 @@ const App = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Error boundary
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900/50 to-black flex items-center justify-center font-devanagari">
+        <div className="text-center text-white">
+          <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
+          <p className="text-gray-300 mb-6">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors"
+          >
+            Reload Page
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900/50 to-black flex items-center justify-center font-devanagari">
+        <div className="text-center text-white">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-300">Loading Sugama Trade...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900/50 to-black relative overflow-hidden font-general antialiased">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900/50 to-black relative overflow-hidden font-devanagari antialiased">
               {/* Enhanced Background with gradient overlay */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
@@ -992,11 +1057,11 @@ const App = () => {
               backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M10 10h10v10H10zM30 10h10v10H30zM50 10h10v10H50zM10 30h10v10H10zM30 30h10v10H30zM50 30h10v10H50zM10 50h10v10H10zM30 50h10v10H30zM50 50h10v10H50z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
             }}></div>
           </div>
-          {/* Floating particles effect */}
+          {/* Floating particles effect with reduced motion support */}
           <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-500/30 rounded-full animate-pulse"></div>
-            <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-purple-500/40 rounded-full animate-ping"></div>
-            <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-blue-400/20 rounded-full animate-pulse"></div>
+            <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-500/30 rounded-full animate-pulse" aria-hidden="true"></div>
+            <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-purple-500/40 rounded-full animate-ping" aria-hidden="true"></div>
+            <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-blue-400/20 rounded-full animate-pulse" aria-hidden="true"></div>
           </div>
         </div>
 
@@ -1008,6 +1073,8 @@ const App = () => {
           backdropFilter: navStyle.blur,
           borderBottom: `1px solid ${navStyle.borderColor}`
         }}
+        role="navigation"
+        aria-label="Main navigation"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
@@ -1023,8 +1090,10 @@ const App = () => {
                   src="/robot_ultra_hd.png" 
                   alt="Sugama Trade Logo" 
                   className="w-10 h-10 object-cover rounded-lg shadow-lg"
+                  loading="eager"
+                  decoding="async"
                 />
-                <div className="text-lg font-['Clash_Display'] font-black bg-gradient-to-r from-pink-400 via-purple-500 to-violet-600 bg-clip-text text-transparent tracking-wider drop-shadow-2xl shadow-black/50 filter drop-shadow-lg hover:scale-105 transition-all duration-300 transform hover:translate-y-[-2px] hover:rotate-1">
+                <div className="text-lg font-devanagari font-black bg-gradient-to-r from-pink-400 via-purple-500 to-violet-600 bg-clip-text text-transparent tracking-wider drop-shadow-2xl shadow-black/50 filter drop-shadow-lg hover:scale-105 transition-all duration-300 transform hover:translate-y-[-2px] hover:rotate-1">
                   Sugama Trade
                 </div>
               </div>
@@ -1040,7 +1109,8 @@ const App = () => {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3 }}
-              className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-cabinet font-semibold py-3 px-8 rounded-2xl transition-all duration-500 flex items-center space-x-3 shadow-2xl hover:shadow-purple-500/25 transform hover:scale-105 overflow-hidden group tracking-wide cursor-pointer"
+              className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-devanagari font-semibold py-3 px-8 rounded-2xl transition-all duration-500 flex items-center space-x-3 shadow-2xl hover:shadow-purple-500/25 transform hover:scale-105 overflow-hidden group tracking-wide cursor-pointer"
+              aria-label="Start trading on Telegram"
             >
               {/* Animated background */}
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-purple-600/0 to-pink-600/0 group-hover:from-blue-600/20 group-hover:via-purple-600/30 group-hover:to-pink-600/20 transition-all duration-700 transform group-hover:scale-150 group-hover:rotate-12"></div>
@@ -1048,7 +1118,7 @@ const App = () => {
               {/* Content */}
               <div className="relative z-10 flex items-center space-x-3">
                 <Send className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                <span className="font-cabinet font-semibold tracking-wide">Trade Now</span>
+                <span className="font-devanagari font-semibold tracking-wide">Trade Now</span>
                 <Sparkles className="w-4 h-4 text-yellow-300 group-hover:rotate-180 transition-transform duration-500" />
               </div>
             </motion.a>
@@ -1101,31 +1171,31 @@ const App = () => {
                 }}
               >
                 {/* Main Headline */}
-                <h1 className="text-5xl lg:text-7xl font-['Plus_Jakarta_Sans'] font-black mb-6 leading-tight bg-gradient-to-r from-white via-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl">
+                <h1 className="text-5xl lg:text-7xl font-devanagari font-black mb-6 leading-tight bg-gradient-to-r from-white via-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl">
                   The Easiest Way to Trade Perps on Base
                 </h1>
                 
                 {/* Sub-headline */}
-                <p className="text-xl mb-8 text-gray-300 leading-relaxed font-['Clash_Display'] font-medium tracking-wide">
+                <p className="text-xl mb-8 text-gray-300 leading-relaxed font-devanagari font-medium tracking-wide">
                   Secure, gasless onboarding, and AI-assisted. Powered by Smart Sessions and intelligent trade execution.
                 </p>
                 
                 {/* Feature Description */}
-                <p className="text-lg mb-8 text-gray-400 leading-relaxed font-['Inter'] font-normal tracking-wide">
+                <p className="text-lg mb-8 text-gray-400 leading-relaxed font-devanagari font-normal tracking-wide">
                   Real-time perp routing across the Base chain — optimized for execution price, fees, and funding using our custom scoring engine.
                 </p>
                 
                 {/* Platform Indicator */}
                 <div className="flex items-center justify-center lg:justify-start space-x-3 text-white">
                   <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 px-4 py-2 rounded-full border border-blue-500/30">
-                    <span className="text-lg font-['Outfit'] font-medium text-blue-200">Live on</span>
+                    <span className="text-lg font-devanagari font-medium text-blue-200">Live on</span>
                     <ArrowRight className="w-5 h-5 text-blue-300" />
                     <img 
                       src="/base.png" 
                       alt="Base Logo" 
                       className="w-6 h-6 object-contain"
                     />
-                    <span className="text-lg font-['Plus_Jakarta_Sans'] font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">BASE</span>
+                    <span className="text-lg font-devanagari font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">BASE</span>
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                   </div>
                 </div>
@@ -1177,7 +1247,7 @@ const App = () => {
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
               >
-                <h3 className="text-lg font-['Outfit'] font-semibold text-gray-300 mb-3 flex items-center justify-center space-x-2">
+                <h3 className="text-lg font-devanagari font-semibold text-gray-300 mb-3 flex items-center justify-center space-x-2">
                   <span>Powered by</span>
                   <img 
                     src="/biconomy.png" 
@@ -1223,7 +1293,7 @@ const App = () => {
                       {/* Platform Name with Effects */}
                       <div className="relative flex items-center space-x-3 px-6 py-3 rounded-full bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 group-hover:border-gray-600/50 transition-all duration-500 group-hover:scale-105">
                         <div className={`w-3 h-3 bg-${platform.color}-500 rounded-full animate-pulse group-hover:animate-ping transition-all duration-500`}></div>
-                        <span className="text-2xl font-['Plus_Jakarta_Sans'] font-bold text-white group-hover:text-gray-200 transition-colors duration-500">
+                        <span className="text-2xl font-devanagari font-bold text-white group-hover:text-gray-200 transition-colors duration-500">
                           {platform.name}
                         </span>
                       </div>
@@ -1700,7 +1770,7 @@ const App = () => {
               <h2 className="hero-title text-center mb-4 animate-text-glow">
                 Advanced Trading Features
               </h2>
-              <p className="text-xl text-gradient-tech max-w-3xl mx-auto font-albert font-medium tracking-wide">
+              <p className="text-xl text-gradient-tech max-w-3xl mx-auto font-devanagari font-medium tracking-wide">
                 Experience the future of decentralized trading with our cutting-edge platform
               </p>
             </motion.div>
@@ -1876,7 +1946,7 @@ const App = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-4xl font-['Space_Grotesk'] font-bold text-white mb-6 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+              <h2 className="text-4xl font-devanagari font-bold text-white mb-6 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
                 Ready to Start Trading?
               </h2>
               <p className="text-xl text-blue-300 mb-8">
@@ -1924,25 +1994,25 @@ const App = () => {
                     {/* Premium glow effect */}
                     <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                                                                     <div className="text-2xl font-['Clash_Display'] font-black bg-gradient-to-r from-pink-400 via-purple-500 to-violet-600 bg-clip-text text-transparent tracking-wider drop-shadow-2xl shadow-black/50 filter drop-shadow-lg hover:scale-105 transition-all duration-300 transform hover:translate-y-[-2px] hover:rotate-1">
-                   Sugama Trade
-                 </div>
+                                                                                     <div className="text-2xl font-devanagari font-black bg-gradient-to-r from-pink-400 via-purple-500 to-violet-600 bg-clip-text text-transparent tracking-wider drop-shadow-2xl shadow-black/50 filter drop-shadow-lg hover:scale-105 transition-all duration-300 transform hover:translate-y-[-2px] hover:rotate-1">
+                  Sugama Trade
+                </div>
                 </div>
                 
                 {/* Enhanced Mission */}
                 <div className="mb-8">
-                  <h3 className="text-base font-['Cabinet_Grotesk'] font-semibold text-white mb-2 flex items-center">
+                  <h3 className="text-base font-devanagari font-semibold text-white mb-2 flex items-center">
                     <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
                     Our Mission
                   </h3>
-                  <p className="text-gray-300 font-['Inter'] leading-relaxed text-sm">
+                  <p className="text-gray-300 font-devanagari leading-relaxed text-sm">
                     We believe in complete decentralization, empowering traders with cutting-edge technology and transparent, secure trading experiences.
                   </p>
                 </div>
                 
                 {/* Enhanced Social Links */}
                 <div>
-                  <h3 className="text-lg font-['Cabinet_Grotesk'] font-semibold text-white mb-4 flex items-center">
+                  <h3 className="text-lg font-devanagari font-semibold text-white mb-4 flex items-center">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
                     Connect With Us
                   </h3>
@@ -2009,19 +2079,19 @@ const App = () => {
               
               {/* Column 2 - Sugama */}
               <div>
-                <h3 className="text-xl font-['Clash_Display'] font-bold text-white mb-6 flex items-center">
+                <h3 className="text-xl font-devanagari font-bold text-white mb-6 flex items-center">
                   <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
                   Sugama
                 </h3>
                 <ul className="space-y-4">
                   <li>
-                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-['Inter'] text-lg flex items-center group">
+                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-devanagari text-lg flex items-center group">
                       <div className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></div>
                       About Us
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-['Inter'] text-lg flex items-center group">
+                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-devanagari text-lg flex items-center group">
                       <div className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></div>
                       Our Team
                     </a>
@@ -2032,25 +2102,25 @@ const App = () => {
               
               {/* Column 3 - Development Tools */}
               <div>
-                <h3 className="text-xl font-['Clash_Display'] font-bold text-white mb-6 flex items-center">
+                <h3 className="text-xl font-devanagari font-bold text-white mb-6 flex items-center">
                   <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
                   Development Tools
                 </h3>
                 <ul className="space-y-4">
                   <li>
-                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-['Inter'] text-lg flex items-center group">
+                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-devanagari text-lg flex items-center group">
                       <div className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-purple-500 transition-colors"></div>
                       Telegram Bot
                     </a>
                   </li>
                   <li>
-                    <a href="https://t.me/sugamatrader" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors duration-300 font-['Inter'] text-lg flex items-center group">
+                    <a href="https://t.me/sugamatrader" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors duration-300 font-devanagari text-lg flex items-center group">
                       <div className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-purple-500 transition-colors"></div>
                       Social Trade
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-['Inter'] text-lg flex items-center group">
+                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-devanagari text-lg flex items-center group">
                       <div className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-purple-500 transition-colors"></div>
                       Base Explorer
                     </a>
@@ -2060,19 +2130,19 @@ const App = () => {
               
               {/* Column 4 - Community */}
               <div>
-                <h3 className="text-xl font-['Clash_Display'] font-bold text-white mb-6 flex items-center">
+                <h3 className="text-xl font-devanagari font-bold text-white mb-6 flex items-center">
                   <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
                   Community
                 </h3>
                 <ul className="space-y-4">
                   <li>
-                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-['Inter'] text-lg flex items-center group">
+                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-devanagari text-lg flex items-center group">
                       <div className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-green-500 transition-colors"></div>
                       GitHub Repository
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-['Inter'] text-lg flex items-center group">
+                    <a href="#" className="text-gray-300 hover:text-white transition-colors duration-300 font-devanagari text-lg flex items-center group">
                       <div className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-green-500 transition-colors"></div>
                       Documentation
                     </a>
@@ -2085,10 +2155,10 @@ const App = () => {
             {/* Enhanced Copyright */}
             <div className="border-t border-gray-800 mt-16 pt-8">
               <div className="flex flex-col md:flex-row justify-between items-center">
-                <div className="text-gray-400 font-['Inter'] text-center md:text-left mb-4 md:mb-0">
+                <div className="text-gray-400 font-devanagari text-center md:text-left mb-4 md:mb-0">
                   <p>&copy; 2024 Sugama Trade. All rights reserved. Built with ❤️ for the decentralized future.</p>
                 </div>
-                <div className="flex space-x-6 text-sm text-gray-400 font-['Inter']">
+                <div className="flex space-x-6 text-sm text-gray-400 font-devanagari">
                   <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
                   <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
                   <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
@@ -2100,12 +2170,13 @@ const App = () => {
 
         {/* Cursor Following Div */}
         <div 
-          className="fixed pointer-events-none z-50 w-4 h-4 bg-white rounded-full shadow-lg transition-transform duration-100 ease-out"
+          className="fixed pointer-events-none z-50 w-4 h-4 bg-white rounded-full shadow-lg transition-transform duration-100 ease-out will-change-transform"
           style={{
             left: cursorPosition.x - 8,
             top: cursorPosition.y - 8,
             transform: 'translate(0, 0)'
           }}
+          aria-hidden="true"
         />
       </div>
     </div>

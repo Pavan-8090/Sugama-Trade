@@ -33,11 +33,14 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        devanagari: ['Noto Serif Devanagari', 'serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-out',
         'bounce-slow': 'bounce 2s infinite',
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'spin-slow': 'spin 3s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -48,8 +51,26 @@ module.exports = {
           '0%': { transform: 'translateY(20px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         }
+      },
+      // Performance optimizations
+      willChange: {
+        'transform': 'transform',
+        'opacity': 'opacity',
+        'scroll': 'scroll-position',
+      },
+      // Accessibility improvements
+      ringOffsetWidth: {
+        '0': '0px',
+        '1': '1px',
+        '2': '2px',
+        '4': '4px',
+        '8': '8px',
       }
     },
   },
   plugins: [],
+  // Performance optimizations
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
 } 
