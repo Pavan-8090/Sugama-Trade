@@ -6,6 +6,7 @@ import {
   Zap, 
   Brain, 
   MessageCircle, 
+  MessageSquare,
   ArrowRight, 
   ChevronRight,
   Globe,
@@ -588,12 +589,7 @@ const App = () => {
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, 
-          rgba(34, 197, 94, 0.1) 0%, 
-          rgba(16, 185, 129, 0.1) 25%, 
-          rgba(5, 150, 105, 0.1) 50%, 
-          rgba(34, 197, 94, 0.1) 75%, 
-          rgba(16, 185, 129, 0.1) 100%);
+        background: transparent;
         opacity: 0;
         transition: opacity 0.8s ease;
         z-index: 1;
@@ -619,11 +615,11 @@ const App = () => {
         gap: 0.5rem;
         background: linear-gradient(135deg, #22c55e, #10b981);
         color: white;
-        padding: 0.75rem 1.5rem;
+        padding: 0.5rem 1.25rem;
         border-radius: 2rem;
         font-weight: 700;
-        font-size: 0.875rem;
-        margin-bottom: 1.5rem;
+        font-size: 0.75rem;
+        margin-bottom: 1rem;
         position: relative;
         overflow: hidden;
         transition: all 0.6s ease;
@@ -655,12 +651,876 @@ const App = () => {
           0 0 30px rgba(34, 197, 94, 0.6);
       }
       
+      .trade-command-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: white;
+        padding: 0.5rem 1.25rem;
+        border-radius: 2rem;
+        font-weight: 700;
+        font-size: 0.75rem;
+        margin-bottom: 1rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.6s ease;
+        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+      }
+      
+      .trade-command-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+          transparent, 
+          rgba(255, 255, 255, 0.4), 
+          transparent);
+        transition: left 0.8s ease;
+      }
+      
+      .trade-command-badge:hover::before {
+        left: 100%;
+      }
+      
+      .trade-command-badge:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 
+          0 15px 35px rgba(251, 191, 36, 0.5),
+          0 0 30px rgba(251, 191, 36, 0.6);
+      }
+      
+      .trade-command-title {
+        font-family: 'Noto Serif Devanagari', serif;
+        font-weight: 800;
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        position: relative;
+        transition: all 0.6s ease;
+      }
+      
+      .trade-command-title .gradient-text {
+        background: linear-gradient(135deg, 
+          #fbbf24 0%, 
+          #f59e0b 25%, 
+          #d97706 50%, 
+          #f59e0b 75%, 
+          #fbbf24 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        background-size: 200% 200%;
+        animation: tradeCommandGradient 3s ease-in-out infinite;
+      }
+      
+      @keyframes tradeCommandGradient {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      
+      .trade-command-container:hover .trade-command-title .gradient-text {
+        animation: tradeCommandGradient 1.5s ease-in-out infinite;
+      }
+      
+      .trade-command-description {
+        font-family: 'Noto Serif Devanagari', serif;
+        font-size: 1.125rem;
+        line-height: 1.7;
+        color: #d1d5db;
+        position: relative;
+        transition: all 0.6s ease;
+        margin-bottom: 2rem;
+      }
+      
+      .trade-command-container:hover .trade-command-description {
+        color: #f3f4f6;
+        text-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+      }
+      
+      /* Premium Floating Elements */
+      .trade-command-container::before {
+        content: '';
+        position: absolute;
+        top: 10%;
+        left: 5%;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, rgba(251, 191, 36, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+        z-index: 1;
+      }
+      
+      .trade-command-container::after {
+        content: '';
+        position: absolute;
+        bottom: 20%;
+        right: 10%;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 8s ease-in-out infinite reverse;
+        z-index: 1;
+      }
+      
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+      }
+      
+      /* Premium Glow Effects */
+      .trade-command-badge::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #fbbf24, #f59e0b, #d97706, #f59e0b, #fbbf24);
+        border-radius: 2rem;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        animation: borderGlow 2s linear infinite;
+      }
+      
+      .trade-command-badge:hover::after {
+        opacity: 1;
+      }
+      
+      @keyframes borderGlow {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      @keyframes spin-slow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      
+      .animate-spin-slow {
+        animation: spin-slow 8s linear infinite;
+      }
+      
+      /* Premium Text Effects */
+      .trade-command-title {
+        position: relative;
+      }
+      
+      .trade-command-title::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        background: linear-gradient(45deg, rgba(249, 115, 22, 0.1), rgba(234, 88, 12, 0.1));
+        border-radius: 20px;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      .trade-command-container:hover .trade-command-title::before {
+        opacity: 1;
+      }
+      
+      /* Premium Particle Effects */
+      .trade-command-particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 1;
+      }
+      
+      .trade-command-particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: #f97316;
+        border-radius: 50%;
+        animation: particleFloat 4s linear infinite;
+      }
+      
+      .trade-command-particle:nth-child(1) {
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+      }
+      
+      .trade-command-particle:nth-child(2) {
+        top: 60%;
+        left: 80%;
+        animation-delay: 1s;
+      }
+      
+      .trade-command-particle:nth-child(3) {
+        top: 80%;
+        left: 20%;
+        animation-delay: 2s;
+      }
+      
+      .trade-command-particle:nth-child(4) {
+        top: 30%;
+        left: 70%;
+        animation-delay: 3s;
+      }
+      
+      @keyframes particleFloat {
+        0% {
+          transform: translateY(0px) scale(1);
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100px) scale(0);
+          opacity: 0;
+        }
+      }
+      
+      /* Premium Hover Enhancements */
+      .trade-command-container:hover .trade-command-badge {
+        transform: translateY(-5px) scale(1.08);
+        box-shadow: 
+          0 20px 40px rgba(249, 115, 22, 0.6),
+          0 0 40px rgba(249, 115, 22, 0.8),
+          0 0 60px rgba(249, 115, 22, 0.4);
+      }
+      
+      .trade-command-container:hover .trade-command-title {
+        transform: translateY(-2px);
+        text-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
+      }
+      
+      .trade-command-container:hover .trade-command-description {
+        transform: translateY(-1px);
+        text-shadow: 0 5px 20px rgba(249, 115, 22, 0.5);
+      }
+      
+      /* Biconomy Premium Styles */
+      .biconomy-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        color: white;
+        padding: 0.5rem 1.25rem;
+        border-radius: 2rem;
+        font-weight: 700;
+        font-size: 0.75rem;
+        margin-bottom: 1rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.6s ease;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+      }
+      
+      .biconomy-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+          transparent, 
+          rgba(255, 255, 255, 0.4), 
+          transparent);
+        transition: left 0.8s ease;
+      }
+      
+      .biconomy-badge:hover::before {
+        left: 100%;
+      }
+      
+      .biconomy-badge:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 
+          0 15px 35px rgba(139, 92, 246, 0.5),
+          0 0 30px rgba(139, 92, 246, 0.6);
+      }
+      
+      .biconomy-title {
+        font-family: 'Noto Serif Devanagari', serif;
+        font-weight: 800;
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        position: relative;
+        transition: all 0.6s ease;
+      }
+      
+      .biconomy-title .gradient-text {
+        background: linear-gradient(135deg, 
+          #8b5cf6 0%, 
+          #7c3aed 25%, 
+          #a78bfa 50%, 
+          #7c3aed 75%, 
+          #8b5cf6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        background-size: 200% 200%;
+        animation: biconomyGradient 3s ease-in-out infinite;
+      }
+      
+      @keyframes biconomyGradient {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      
+      .biconomy-container:hover .biconomy-title .gradient-text {
+        animation: biconomyGradient 1.5s ease-in-out infinite;
+      }
+      
+      .biconomy-description {
+        font-family: 'Noto Serif Devanagari', serif;
+        font-size: 1.125rem;
+        line-height: 1.7;
+        color: #d1d5db;
+        position: relative;
+        transition: all 0.6s ease;
+        margin-bottom: 2rem;
+      }
+      
+      .biconomy-container:hover .biconomy-description {
+        color: #f3f4f6;
+        text-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+      }
+      
+      /* Biconomy Floating Elements */
+      .biconomy-container::before {
+        content: '';
+        position: absolute;
+        top: 15%;
+        left: 8%;
+        width: 120px;
+        height: 120px;
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: biconomyFloat 7s ease-in-out infinite;
+        z-index: 1;
+      }
+      
+      .biconomy-container::after {
+        content: '';
+        position: absolute;
+        bottom: 25%;
+        right: 12%;
+        width: 180px;
+        height: 180px;
+        background: radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: biconomyFloat 9s ease-in-out infinite reverse;
+        z-index: 1;
+      }
+      
+      @keyframes biconomyFloat {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-25px) rotate(180deg); }
+      }
+      
+
+      
+      /* Biconomy Hover Enhancements */
+      .biconomy-container:hover .biconomy-badge {
+        transform: translateY(-5px) scale(1.08);
+        box-shadow: 
+          0 20px 40px rgba(139, 92, 246, 0.6),
+          0 0 40px rgba(139, 92, 246, 0.8),
+          0 0 60px rgba(139, 92, 246, 0.4);
+      }
+      
+      .biconomy-container:hover .biconomy-title {
+        transform: translateY(-2px);
+        text-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+      }
+      
+      .biconomy-container:hover .biconomy-description {
+        transform: translateY(-1px);
+        text-shadow: 0 5px 20px rgba(139, 92, 246, 0.5);
+      }
+      
+      /* Query Trading Premium Styles */
+      .query-trading-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 2rem;
+        font-weight: 700;
+        font-size: 0.75rem;
+        margin-bottom: 0.125rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.6s ease;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        cursor: pointer;
+      }
+      
+      .query-trading-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+          transparent, 
+          rgba(255, 255, 255, 0.4), 
+          transparent);
+        transition: left 0.8s ease;
+      }
+      
+      .query-trading-badge::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #3b82f6, #1d4ed8, #60a5fa, #1d4ed8, #3b82f6);
+        border-radius: 2rem;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        animation: borderGlow 2s linear infinite;
+      }
+      
+      .query-trading-badge:hover::after {
+        opacity: 1;
+      }
+      
+      .query-trading-badge:hover::before {
+        left: 100%;
+      }
+      
+      .query-trading-badge:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 
+          0 15px 35px rgba(59, 130, 246, 0.5),
+          0 0 30px rgba(59, 130, 246, 0.6),
+          0 0 50px rgba(59, 130, 246, 0.3);
+        background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      }
+      
+      .query-trading-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 800;
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        position: relative;
+        transition: all 0.6s ease;
+      }
+      
+      .query-trading-title .gradient-text {
+        background: linear-gradient(135deg, 
+          #3b82f6 0%, 
+          #1d4ed8 25%, 
+          #60a5fa 50%, 
+          #1d4ed8 75%, 
+          #3b82f6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        background-size: 200% 200%;
+        animation: queryTradingGradient 3s ease-in-out infinite;
+      }
+      
+      @keyframes queryTradingGradient {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      
+      .query-trading-container:hover .query-trading-title .gradient-text {
+        animation: queryTradingGradient 1.5s ease-in-out infinite;
+      }
+      
+      .query-trading-subtitle {
+        font-family: 'Noto Serif Devanagari', serif;
+        font-weight: 600;
+        font-size: 1.5rem;
+        line-height: 1.3;
+        color: #ffffff;
+        margin-bottom: 1.5rem;
+        position: relative;
+        transition: all 0.6s ease;
+      }
+      
+      .query-trading-container:hover .query-trading-subtitle {
+        color: #f3f4f6;
+        text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+      }
+      
+      .query-trading-description {
+        font-family: 'Noto Serif Devanagari', serif;
+        font-size: 1.125rem;
+        line-height: 1.7;
+        color: #d1d5db;
+        position: relative;
+        transition: all 0.6s ease;
+        margin-bottom: 2rem;
+      }
+      
+      .query-trading-container:hover .query-trading-description {
+        color: #f3f4f6;
+        text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+      }
+      
+      /* Query Trading Floating Elements */
+      .query-trading-container::before {
+        content: '';
+        position: absolute;
+        top: 20%;
+        left: 10%;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: queryTradingFloat 8s ease-in-out infinite;
+        z-index: 1;
+      }
+      
+      .query-trading-container::after {
+        content: '';
+        position: absolute;
+        bottom: 30%;
+        right: 15%;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(29, 78, 216, 0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: queryTradingFloat 10s ease-in-out infinite reverse;
+        z-index: 1;
+      }
+      
+      @keyframes queryTradingFloat {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-30px) rotate(180deg); }
+      }
+      
+      /* Query Trading Particle Effects */
+      .query-trading-particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 1;
+      }
+      
+      .query-trading-particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: #3b82f6;
+        border-radius: 50%;
+        animation: queryTradingParticleFloat 6s linear infinite;
+      }
+      
+      .query-trading-particle:nth-child(1) {
+        top: 30%;
+        left: 20%;
+        animation-delay: 0s;
+      }
+      
+      .query-trading-particle:nth-child(2) {
+        top: 70%;
+        left: 80%;
+        animation-delay: 2s;
+      }
+      
+      .query-trading-particle:nth-child(3) {
+        top: 90%;
+        left: 30%;
+        animation-delay: 4s;
+      }
+      
+      .query-trading-particle:nth-child(4) {
+        top: 40%;
+        left: 70%;
+        animation-delay: 1s;
+      }
+      
+      .query-trading-particle:nth-child(5) {
+        top: 60%;
+        left: 10%;
+        animation-delay: 3s;
+      }
+      
+      @keyframes queryTradingParticleFloat {
+        0% {
+          transform: translateY(0px) scale(1);
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-150px) scale(0);
+          opacity: 0;
+        }
+      }
+      
+      /* Query Trading Hover Enhancements */
+      .query-trading-container:hover .query-trading-badge {
+        transform: translateY(-5px) scale(1.08);
+        box-shadow: 
+          0 20px 40px rgba(59, 130, 246, 0.6),
+          0 0 40px rgba(59, 130, 246, 0.8),
+          0 0 60px rgba(59, 130, 246, 0.4);
+      }
+      
+      .query-trading-container:hover .query-trading-title {
+        transform: translateY(-2px);
+        text-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+      }
+      
+      .query-trading-container:hover .query-trading-subtitle {
+        transform: translateY(-1px);
+        text-shadow: 0 5px 20px rgba(59, 130, 246, 0.5);
+      }
+      
+      .query-trading-container:hover .query-trading-description {
+        transform: translateY(-1px);
+        text-shadow: 0 5px 20px rgba(59, 130, 246, 0.5);
+      }
+      
+      /* Seamless Onboarding Premium Styles */
+      .seamless-onboarding-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #0ea5e9, #0284c7);
+        color: white;
+        padding: 0.5rem 1.25rem;
+        border-radius: 2rem;
+        font-weight: 700;
+        font-size: 0.75rem;
+        margin-bottom: 0.75rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.6s ease;
+        box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+      }
+      
+      .seamless-onboarding-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+          transparent, 
+          rgba(255, 255, 255, 0.4), 
+          transparent);
+        transition: left 0.8s ease;
+      }
+      
+      .seamless-onboarding-badge:hover::before {
+        left: 100%;
+      }
+      
+      .seamless-onboarding-badge:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 
+          0 15px 35px rgba(14, 165, 233, 0.5),
+          0 0 30px rgba(14, 165, 233, 0.6);
+      }
+      
+      .seamless-onboarding-title {
+        font-family: 'Inter', sans-serif;
+        font-weight: 800;
+        font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+        line-height: 1.1;
+        margin-bottom: 0.75rem;
+        position: relative;
+        transition: all 0.6s ease;
+      }
+      
+      .seamless-onboarding-title .gradient-text {
+        background: linear-gradient(135deg, 
+          #ffffff 0%, 
+          #f0f9ff 25%, 
+          #0ea5e9 50%, 
+          #f0f9ff 75%, 
+          #ffffff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        background-size: 200% 200%;
+        animation: seamlessOnboardingGradient 3s ease-in-out infinite;
+      }
+      
+      @keyframes seamlessOnboardingGradient {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      
+      .seamless-onboarding-container:hover .seamless-onboarding-title .gradient-text {
+        animation: seamlessOnboardingGradient 1.5s ease-in-out infinite;
+      }
+      
+      .seamless-onboarding-description {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: #d1d5db;
+        position: relative;
+        transition: all 0.6s ease;
+        margin-bottom: 1rem;
+      }
+      
+      .seamless-onboarding-container:hover .seamless-onboarding-description {
+        color: #f3f4f6;
+        text-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+      }
+      
+      /* Seamless Onboarding Floating Elements */
+      .seamless-onboarding-container::before {
+        content: '';
+        position: absolute;
+        top: 15%;
+        left: 15%;
+        width: 180px;
+        height: 180px;
+        background: radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: seamlessOnboardingFloat 12s ease-in-out infinite;
+        z-index: 1;
+      }
+      
+      .seamless-onboarding-container::after {
+        content: '';
+        position: absolute;
+        bottom: 25%;
+        right: 20%;
+        width: 220px;
+        height: 220px;
+        background: radial-gradient(circle, rgba(2, 132, 199, 0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: seamlessOnboardingFloat 15s ease-in-out infinite reverse;
+        z-index: 1;
+      }
+      
+      @keyframes seamlessOnboardingFloat {
+        0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+        50% { transform: translateY(-40px) rotate(180deg) scale(1.1); }
+      }
+      
+      /* Seamless Onboarding Particle Effects */
+      .seamless-onboarding-particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 1;
+      }
+      
+      .seamless-onboarding-particle {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: #0ea5e9;
+        border-radius: 50%;
+        animation: seamlessOnboardingParticleFloat 8s linear infinite;
+      }
+      
+      .seamless-onboarding-particle:nth-child(1) {
+        top: 25%;
+        left: 25%;
+        animation-delay: 0s;
+      }
+      
+      .seamless-onboarding-particle:nth-child(2) {
+        top: 75%;
+        left: 75%;
+        animation-delay: 2s;
+      }
+      
+      .seamless-onboarding-particle:nth-child(3) {
+        top: 85%;
+        left: 35%;
+        animation-delay: 4s;
+      }
+      
+      .seamless-onboarding-particle:nth-child(4) {
+        top: 35%;
+        left: 75%;
+        animation-delay: 1s;
+      }
+      
+      .seamless-onboarding-particle:nth-child(5) {
+        top: 65%;
+        left: 15%;
+        animation-delay: 3s;
+      }
+      
+      .seamless-onboarding-particle:nth-child(6) {
+        top: 45%;
+        left: 85%;
+        animation-delay: 5s;
+      }
+      
+      @keyframes seamlessOnboardingParticleFloat {
+        0% {
+          transform: translateY(0px) scale(1);
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-200px) scale(0);
+          opacity: 0;
+        }
+      }
+      
+      /* Seamless Onboarding Hover Enhancements */
+      .seamless-onboarding-container:hover .seamless-onboarding-badge {
+        transform: translateY(-5px) scale(1.08);
+        box-shadow: 
+          0 20px 40px rgba(14, 165, 233, 0.6),
+          0 0 40px rgba(14, 165, 233, 0.8),
+          0 0 60px rgba(14, 165, 233, 0.4);
+      }
+      
+      .seamless-onboarding-container:hover .seamless-onboarding-title {
+        transform: translateY(-2px);
+        text-shadow: 0 10px 30px rgba(14, 165, 233, 0.3);
+      }
+      
+      .seamless-onboarding-container:hover .seamless-onboarding-description {
+        transform: translateY(-1px);
+        text-shadow: 0 5px 20px rgba(14, 165, 233, 0.5);
+      }
+      
       .smart-routing-title {
         font-family: 'Noto Serif Devanagari', serif;
         font-weight: 800;
-        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-size: clamp(2rem, 4vw, 3rem);
         line-height: 1.1;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
         position: relative;
         transition: all 0.6s ease;
       }
@@ -690,17 +1550,17 @@ const App = () => {
       
       .smart-routing-description {
         font-family: 'Noto Serif Devanagari', serif;
-        font-size: 1.125rem;
-        line-height: 1.7;
+        font-size: 1rem;
+        line-height: 1.6;
         color: #d1d5db;
         position: relative;
         transition: all 0.6s ease;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
       }
       
       .smart-routing-container:hover .smart-routing-description {
         color: #f3f4f6;
-        text-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+        text-shadow: none;
       }
       
       .smart-routing-chat-container {
@@ -711,7 +1571,7 @@ const App = () => {
       }
       
       .smart-routing-chat-container:hover {
-        transform: translateZ(40px) rotateY(-8deg) rotateX(5deg);
+        /* No hover effects */
       }
       
       .smart-routing-chat-container::before {
@@ -729,7 +1589,7 @@ const App = () => {
       }
       
       .smart-routing-chat-container:hover::before {
-        opacity: 0.9;
+        opacity: 0;
       }
       
       @keyframes chatBorderRotate {
@@ -749,16 +1609,11 @@ const App = () => {
         backdrop-filter: blur(20px);
         box-shadow: 
           0 20px 40px rgba(0, 0, 0, 0.1),
-          0 0 0 1px rgba(34, 197, 94, 0.1);
+          0 0 0 1px rgba(255, 255, 255, 0.1);
       }
       
       .smart-routing-chat-container:hover .smart-routing-chat-inner {
-        border-color: #22c55e;
-        box-shadow: 
-          0 40px 80px -12px rgba(0, 0, 0, 0.3),
-          0 0 0 1px #22c55e,
-          0 0 60px #22c55e,
-          0 0 120px rgba(16, 185, 129, 0.4);
+        /* No hover effects */
       }
       
       .chat-bubble {
@@ -767,12 +1622,11 @@ const App = () => {
       }
       
       .smart-routing-chat-container:hover .chat-bubble {
-        transform: translateZ(10px);
+        /* No hover effects */
       }
       
       .chat-bubble:hover {
-        transform: translateZ(15px) scale(1.02);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        /* No hover effects */
       }
       
       .action-button {
@@ -833,6 +1687,61 @@ const App = () => {
           opacity: 1;
         }
       }
+      
+      /* Sky Blue Color Overrides for Seamless Onboarding Section */
+      #onboarding .smart-routing-badge {
+        background: linear-gradient(135deg, #0ea5e9, #0284c7);
+        box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+      }
+      
+      #onboarding .smart-routing-badge:hover {
+        box-shadow: 
+          0 15px 35px rgba(14, 165, 233, 0.5),
+          0 0 30px rgba(14, 165, 233, 0.6);
+      }
+      
+      #onboarding .smart-routing-title .gradient-text {
+        background: linear-gradient(135deg, 
+          #0ea5e9 0%, 
+          #38bdf8 25%, 
+          #7dd3fc 50%, 
+          #38bdf8 75%, 
+          #0ea5e9 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        background-size: 200% 200%;
+        animation: titleGradient 3s ease-in-out infinite;
+      }
+      
+      #onboarding .smart-routing-container:hover .smart-routing-title .gradient-text {
+        animation: titleGradient 1.5s ease-in-out infinite;
+      }
+      
+      #onboarding .smart-routing-container:hover .smart-routing-description {
+        color: #f3f4f6;
+        text-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+      }
+      
+
+      
+      .trade-command-title {
+        font-family: 'Noto Serif Devanagari', serif;
+        font-weight: 800;
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        position: relative;
+        transition: all 0.6s ease;
+      }
+      
+
+      
+
+      
+
+      
+
       
 
       
@@ -945,6 +1854,36 @@ const App = () => {
         .card-3d-lift:hover {
           transform: translateY(-8px) translateZ(10px);
         }
+      }
+      
+
+      
+      /* Enhanced Biconomy Container Effects */
+      .biconomy-container {
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .biconomy-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, 
+          rgba(139, 92, 246, 0.1) 0%, 
+          rgba(124, 58, 237, 0.1) 25%, 
+          rgba(167, 139, 250, 0.1) 50%, 
+          rgba(139, 92, 246, 0.1) 75%, 
+          rgba(124, 58, 237, 0.1) 100%);
+        opacity: 0;
+        transition: opacity 0.8s ease;
+        z-index: 1;
+      }
+      
+      .biconomy-container:hover::before {
+        opacity: 1;
       }
     `;
     document.head.appendChild(style);
@@ -1186,17 +2125,29 @@ const App = () => {
                 </p>
                 
                 {/* Platform Indicator */}
-                <div className="flex items-center justify-center lg:justify-start space-x-3 text-white">
-                  <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 px-4 py-2 rounded-full border border-blue-500/30">
-                    <span className="text-lg font-devanagari font-medium text-blue-200">Live on</span>
-                    <ArrowRight className="w-5 h-5 text-blue-300" />
+                <div className="flex items-center justify-center space-x-3 text-white">
+                  <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 px-6 py-3 rounded-full border border-blue-500/30 shadow-lg hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 relative overflow-hidden group">
+                    {/* Animated background gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    {/* Glowing border effect */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    <span className="text-lg font-devanagari font-medium text-blue-200 mt-2 relative z-10 group-hover:text-blue-100 transition-colors duration-300">Live on</span>
+                    <ArrowRight className="w-5 h-5 text-blue-300 relative z-10 group-hover:text-blue-200 transition-colors duration-300 group-hover:translate-x-1" />
                     <img 
                       src="/base.png" 
                       alt="Base Logo" 
-                      className="w-6 h-6 object-contain"
+                      className="w-6 h-6 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300"
                     />
-                    <span className="text-lg font-devanagari font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">BASE</span>
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-lg font-devanagari font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mt-2 relative z-10 group-hover:from-blue-300 group-hover:to-purple-300 transition-all duration-300">BASE</span>
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse relative z-10 group-hover:bg-green-300 transition-colors duration-300"></div>
+                    
+                    {/* Floating particles */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      <div className="absolute top-1 left-1/4 w-1 h-1 bg-blue-400 rounded-full animate-ping" style={{ animationDelay: '0s' }}></div>
+                      <div className="absolute bottom-1 right-1/4 w-1 h-1 bg-purple-400 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -1248,7 +2199,7 @@ const App = () => {
                 viewport={{ once: true }}
               >
                 <h3 className="text-lg font-devanagari font-semibold text-gray-300 mb-3 flex items-center justify-center space-x-2">
-                  <span>Powered by</span>
+                  <span>Integrated platform</span>
                   <img 
                     src="/biconomy.png" 
                     alt="Biconomy Logo" 
@@ -1306,7 +2257,7 @@ const App = () => {
         </section>
 
         {/* Smart Routing Section */}
-        <section ref={routingRef} id="routing" className="py-20 bg-gray-900 relative overflow-hidden smart-routing-container">
+        <section ref={routingRef} id="routing" className="py-12 bg-gray-900 relative overflow-hidden smart-routing-container">
           {/* Enhanced Background with gradient overlay */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900"></div>
@@ -1317,16 +2268,16 @@ const App = () => {
             </div>
             {/* Enhanced Floating particles effect */}
             <div className="absolute inset-0 overflow-hidden">
-              <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-green-500/30 rounded-full animate-pulse"></div>
-              <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-emerald-500/40 rounded-full animate-ping"></div>
-              <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-green-400/20 rounded-full animate-pulse"></div>
+              <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-500/30 rounded-full animate-pulse"></div>
+              <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-purple-500/40 rounded-full animate-ping"></div>
+              <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-blue-400/20 rounded-full animate-pulse"></div>
               <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-teal-400/50 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
               <div className="absolute top-3/4 right-1/4 w-1.5 h-1.5 bg-emerald-400/30 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
             </div>
           </div>
           
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
               {/* Left Content */}
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -1460,7 +2411,17 @@ const App = () => {
         </section>
 
         {/* Seamless Onboarding Section */}
-        <section ref={onboardingRef} id="onboarding" className="py-20 bg-black relative overflow-hidden">
+        <section ref={onboardingRef} id="onboarding" className="py-8 bg-black relative overflow-hidden smart-routing-container">
+          {/* Premium Particle Effects */}
+          <div className="seamless-onboarding-particles">
+            <div className="seamless-onboarding-particle"></div>
+            <div className="seamless-onboarding-particle"></div>
+            <div className="seamless-onboarding-particle"></div>
+            <div className="seamless-onboarding-particle"></div>
+            <div className="seamless-onboarding-particle"></div>
+            <div className="seamless-onboarding-particle"></div>
+          </div>
+          
           {/* Enhanced Background with gradient overlay */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
@@ -1477,8 +2438,8 @@ const App = () => {
             </div>
           </div>
           
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-32 items-center">
               {/* Left Side - Image Block */}
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -1488,7 +2449,7 @@ const App = () => {
                 className="relative flex justify-center lg:justify-start"
               >
                 {/* Image Container */}
-                <div className="relative w-[768px] h-[576px] bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 shadow-2xl overflow-hidden">
+                <div className="relative w-[500px] h-[375px] bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 shadow-2xl overflow-hidden">
                   {/* Trading Chart Interface Image */}
                   <img 
                     src="/su4.png" 
@@ -1509,18 +2470,19 @@ const App = () => {
                 viewport={{ once: true }}
                 className="text-white"
               >
-                {/* Blue Heading */}
-                <div className="text-blue-400 font-semibold mb-4">
-                  Seamless Onboarding
+                {/* Enhanced Badge */}
+                <div className="smart-routing-badge">
+                  <Target className="w-5 h-5" />
+                  <span>Seamless Onboarding</span>
                 </div>
                 
-                {/* Main Headline */}
-                <h2 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-                  Start trading in seconds.
+                {/* Enhanced Main Headline */}
+                <h2 className="smart-routing-title">
+                  <span className="gradient-text">Start trading in seconds.</span>
                 </h2>
                 
-                {/* Description */}
-                <p className="text-lg text-gray-300 leading-relaxed">
+                {/* Enhanced Description */}
+                <p className="smart-routing-description">
                   No wallet setup stress. We handle sessions, approvals, and UX flows — you focus on trading.
                 </p>
               </motion.div>
@@ -1528,8 +2490,16 @@ const App = () => {
           </div>
         </section>
 
-        {/* Natural Language Trading Section */}
-        <section ref={languageRef} id="language" className="py-20 bg-gray-900 relative overflow-hidden">
+        {/* Premium Telegram Trading Interface Section */}
+        <section ref={languageRef} id="language" className="py-12 bg-gray-900 relative overflow-hidden smart-routing-container">
+          {/* Premium Particle Effects */}
+          <div className="trade-command-particles">
+            <div className="trade-command-particle"></div>
+            <div className="trade-command-particle"></div>
+            <div className="trade-command-particle"></div>
+            <div className="trade-command-particle"></div>
+          </div>
+          
           {/* Enhanced Background with gradient overlay */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900"></div>
@@ -1538,67 +2508,152 @@ const App = () => {
                 backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M10 10h10v10H10zM30 10h10v10H30zM50 10h10v10H50zM10 30h10v10H10zM30 30h10v10H30zM50 30h10v10H50zM10 50h10v10H10zM30 50h10v10H30zM50 50h10v10H50z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
               }}></div>
             </div>
-            {/* Floating particles effect */}
+            {/* Enhanced Floating particles effect */}
             <div className="absolute inset-0 overflow-hidden">
               <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-orange-500/30 rounded-full animate-pulse"></div>
               <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-yellow-500/40 rounded-full animate-ping"></div>
               <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-orange-400/20 rounded-full animate-pulse"></div>
+              <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-red-400/50 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
+              <div className="absolute top-3/4 right-1/4 w-1.5 h-1.5 bg-orange-400/30 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
             </div>
           </div>
           
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
               {/* Left Side - Text Content */}
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
-                className="text-white"
+                                className="text-white"
               >
-                {/* Orange Heading */}
-                <div className="text-orange-400 font-semibold mb-4">
-                  Trade with One Command
+                {/* Enhanced Badge */}
+                <div className="trade-command-badge">
+                  <Target className="w-5 h-5" />
+                  <span>Trade with One Command</span>
                 </div>
                 
-                {/* Main Headline */}
-                <h2 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-                  Effortless trading via natural language.
+                {/* Enhanced Main Headline */}
+                <h2 className="trade-command-title">
+                  <span className="gradient-text">Effortless trading via<br />
+                  natural language</span>
                 </h2>
                 
-                {/* Description */}
-                <p className="text-lg text-gray-300 leading-relaxed">
+                {/* Enhanced Description */}
+                <p className="trade-command-description">
                   "Open a BTC long with $100 at 10x leverage" — just one message to our AI assistant.
                 </p>
               </motion.div>
               
-              {/* Right Side - Image Block */}
+              {/* Right Side - Premium Telegram Phone Mockup */}
               <motion.div
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
                 viewport={{ once: true }}
-                className="relative flex justify-center lg:justify-end"
+                className="relative flex justify-center lg:justify-center"
               >
-                {/* Image Container */}
-                <div className="relative w-80 h-96 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 shadow-2xl overflow-hidden">
-                  {/* Telegram Trading Interface Image */}
-                  <img 
-                    src="/su2.png" 
-                    alt="Telegram Trading Bot Interface" 
-                    className="w-full h-full object-cover"
-                  />
-                  
-                  {/* Glow Effect */}
-                  <div className="absolute inset-0 bg-orange-500/5 rounded-2xl"></div>
+                <div className="smart-routing-chat-container">
+                  <div className="smart-routing-chat-inner w-80 h-96 p-4">
+                    {/* Floating Elements */}
+                    <div className="floating-elements">
+                      <div 
+                        className="floating-element" 
+                        style={{
+                          width: '6px',
+                          height: '6px',
+                          background: '#22c55e',
+                          top: '10%',
+                          left: '15%',
+                          animationDelay: '0s'
+                        }}
+                      ></div>
+                      <div 
+                        className="floating-element" 
+                        style={{
+                          width: '4px',
+                          height: '4px',
+                          background: '#10b981',
+                          top: '70%',
+                          right: '20%',
+                          animationDelay: '1s'
+                        }}
+                      ></div>
+                      <div 
+                        className="floating-element" 
+                        style={{
+                          width: '5px',
+                          height: '5px',
+                          background: '#059669',
+                          bottom: '20%',
+                          left: '25%',
+                          animationDelay: '2s'
+                        }}
+                      ></div>
+                    </div>
+                    
+                    {/* Doodle Background Pattern */}
+                    <div className="absolute inset-0 opacity-10">
+                      <div className="w-full h-full" style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='20' cy='20' r='3'/%3E%3Ccircle cx='80' cy='30' r='2'/%3E%3Ccircle cx='40' cy='70' r='4'/%3E%3Cpath d='M10 50 Q30 30 50 50 T90 50' stroke='%23000000' stroke-width='1' fill='none'/%3E%3Cpath d='M15 80 Q35 60 55 80 T95 80' stroke='%23000000' stroke-width='1' fill='none'/%3E%3C/g%3E%3C/svg%3E")`,
+                      }}></div>
+                    </div>
+                    
+                    {/* Chat Content */}
+                    <div className="relative z-10 h-full flex flex-col justify-between">
+                      {/* Chat Bubbles */}
+                      <div className="space-y-4 mt-4">
+                        {/* User Message */}
+                        <div className="flex justify-end">
+                          <div className="flex items-end space-x-2">
+                            <div className="chat-bubble bg-gray-200 rounded-2xl px-4 py-2 max-w-xs">
+                              <p className="text-gray-800 text-sm">I'd like to do a 15x SOL long with $120 / collateral, tp at 200</p>
+                            </div>
+                            <div className="w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center">
+                              <div className="w-4 h-4 bg-white rounded-full"></div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Bot Response */}
+                        <div className="flex justify-start">
+                          <div className="flex items-start space-x-2">
+                            <div className="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center">
+                              <span className="text-white text-sm">😊</span>
+                            </div>
+                            <div className="chat-bubble bg-white rounded-2xl px-4 py-2 max-w-xs shadow-lg">
+                              <p className="text-gray-800 text-sm">
+                                Position created on<br/>
+                                <span className="font-semibold text-[#0088cc]">Avantis</span><br/>
+                                Sol long in Avantis,<br/>
+                                TX hash: <span className="font-mono text-xs">0x6f70b...</span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+
               </motion.div>
             </div>
           </div>
         </section>
 
         {/* One Query Trading Section */}
-        <section ref={queryRef} id="query" className="py-20 bg-black relative overflow-hidden">
+        <section ref={queryRef} id="query" className="py-12 bg-black relative overflow-hidden query-trading-container">
+          {/* Premium Particle Effects */}
+          <div className="query-trading-particles">
+            <div className="query-trading-particle"></div>
+            <div className="query-trading-particle"></div>
+            <div className="query-trading-particle"></div>
+            <div className="query-trading-particle"></div>
+            <div className="query-trading-particle"></div>
+          </div>
+          
           {/* Enhanced Background with gradient overlay */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
@@ -1615,8 +2670,8 @@ const App = () => {
             </div>
           </div>
           
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
               {/* Left Side - Image Block */}
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -1626,7 +2681,7 @@ const App = () => {
                 className="relative flex justify-center lg:justify-start"
               >
                 {/* Image Container */}
-                <div className="relative w-96 h-96 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 shadow-2xl overflow-hidden">
+                <div className="relative w-96 h-80 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 shadow-2xl overflow-hidden">
                   {/* AI Trading Flow Illustration */}
                   <img 
                     src="/su5.png" 
@@ -1647,23 +2702,30 @@ const App = () => {
                 viewport={{ once: true }}
                 className="text-white"
               >
-                {/* Blue Heading */}
-                <div className="text-blue-400 font-semibold mb-4">
-                  TRADE
+                {/* Enhanced Badge */}
+                <div className="query-trading-badge group">
+                  <span className="relative z-10 group-hover:text-blue-100 transition-colors duration-300">TRADE</span>
+                  
+                  {/* Floating particles */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute top-1 left-1/4 w-1 h-1 bg-blue-400 rounded-full animate-ping" style={{ animationDelay: '0s' }}></div>
+                    <div className="absolute bottom-1 right-1/4 w-1 h-1 bg-blue-300 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
+                    <div className="absolute top-1/2 left-1/2 w-0.5 h-0.5 bg-blue-200 rounded-full animate-ping" style={{ animationDelay: '2s' }}></div>
+                  </div>
                 </div>
                 
-                {/* Main Headline */}
-                <h2 className="text-4xl lg:text-5xl font-['Space_Grotesk'] font-bold mb-6 leading-tight bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                  one query trading
+                {/* Enhanced Main Headline */}
+                <h2 className="query-trading-title">
+                  <span className="gradient-text">one query trading</span>
                 </h2>
                 
-                {/* Sub-headline */}
-                <h3 className="text-2xl font-semibold mb-6 text-white">
+                {/* Enhanced Sub-headline */}
+                <h3 className="query-trading-subtitle">
                   Focus on trading we got you covered with just a query trading
                 </h3>
                 
-                {/* Description */}
-                <p className="text-lg text-gray-300 leading-relaxed">
+                {/* Enhanced Description */}
+                <p className="query-trading-description">
                   With smart accounts its possible to trade with out approvals for every trade, trading never gets this easier.
                 </p>
               </motion.div>
@@ -1672,7 +2734,7 @@ const App = () => {
         </section>
 
         {/* Biconomy Smart Sessions Section */}
-        <section ref={biconomyRef} id="biconomy" className="py-20 bg-gray-900 relative overflow-hidden">
+        <section ref={biconomyRef} id="biconomy" className="py-12 bg-gray-900 relative overflow-hidden biconomy-container">
           {/* Enhanced Background with gradient overlay */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900"></div>
@@ -1681,16 +2743,12 @@ const App = () => {
                 backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M10 10h10v10H10zM30 10h10v10H30zM50 10h10v10H50zM10 30h10v10H10zM30 30h10v10H30zM50 30h10v10H50zM10 50h10v10H10zM30 50h10v10H30zM50 50h10v10H50z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
               }}></div>
             </div>
-            {/* Floating particles effect */}
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-purple-500/30 rounded-full animate-pulse"></div>
-              <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-blue-500/40 rounded-full animate-ping"></div>
-              <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-purple-400/20 rounded-full animate-pulse"></div>
-            </div>
           </div>
           
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+
+          
+          <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
               {/* Left Side - Text Content */}
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -1699,19 +2757,19 @@ const App = () => {
                 viewport={{ once: true }}
                 className="text-white"
               >
-                {/* Purple Heading */}
-                <div className="text-purple-400 font-semibold mb-4">
-                  Biconomy Smart Sessions
+                {/* Enhanced Badge */}
+                <div className="biconomy-badge">
+                  <span>Biconomy Smart Sessions</span>
                 </div>
                 
-                {/* Main Headline */}
-                <h2 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                {/* Enhanced Main Headline */}
+                <h2 className="biconomy-title">
                   Non-custodial security with<br />
-                  <span className="text-blue-400">fine-grained permission control</span>
+                  <span className="gradient-text">fine-grained permission control</span>
                 </h2>
                 
-                {/* Description */}
-                <p className="text-lg text-gray-300 leading-relaxed">
+                {/* Enhanced Description */}
+                <p className="biconomy-description">
                   No key sharing, no approvals beyond your scope. You control what gets signed.
                 </p>
               </motion.div>
@@ -1725,11 +2783,11 @@ const App = () => {
                 className="relative flex justify-center lg:justify-end"
               >
                 {/* Image Container */}
-                <div className="relative w-80 h-64 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 shadow-2xl overflow-hidden">
-                  {/* Account Abstraction Security Illustration */}
+                <div className="relative w-96 h-80 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 shadow-2xl overflow-hidden">
+                  {/* Security Illustration */}
                   <img 
                     src="/su61.png" 
-                    alt="Account Abstraction Security" 
+                    alt="Security Illustration" 
                     className="w-full h-full object-cover"
                   />
                   
@@ -1742,7 +2800,7 @@ const App = () => {
         </section>
 
         {/* Features Section */}
-        <section ref={featuresRef} id="features" className="py-20 bg-gray-900/50 relative overflow-hidden">
+        <section ref={featuresRef} id="features" className="py-12 bg-gray-900/50 relative overflow-hidden">
           {/* Enhanced Background with gradient overlay */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-br from-gray-900/50 via-black/30 to-gray-900/50"></div>
@@ -1922,7 +2980,7 @@ const App = () => {
         </section>
 
         {/* CTA Section */}
-        <section ref={ctaRef} id="cta" className="py-20 bg-gradient-to-r from-blue-600/20 to-purple-600/20 relative overflow-hidden">
+        <section ref={ctaRef} id="cta" className="py-12 bg-gradient-to-r from-blue-600/20 to-purple-600/20 relative overflow-hidden">
           {/* Enhanced Background with gradient overlay */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/10 to-blue-600/10"></div>
@@ -1979,8 +3037,8 @@ const App = () => {
             }}></div>
           </div>
           
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-12">
+          <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
               {/* Column 1 - Brand & Mission */}
               <div className="lg:col-span-1">
                                 {/* Premium Enhanced Logo */}
